@@ -2,6 +2,7 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
+from django.conf import settings
 
 
 class Question(models.Model):
@@ -19,3 +20,15 @@ class Choice(models.Model):
     votes = models.IntegerField(default=0)
     def __str__(self):
         return self.choice_text
+
+
+class Image(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,)
+    title = models.CharField(max_length=200)
+    description = models.CharField(max_length=200)
+    img = models.ImageField(upload_to = "images/")
+    gps_coordinates = models.CharField(max_length=200)
+    taken_date = models.DateTimeField()
+    score = models.IntegerField()

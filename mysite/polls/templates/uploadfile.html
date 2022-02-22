@@ -1,0 +1,14 @@
+<html>
+<head>
+<title>Django File Upload</title>
+</head>
+<body>
+	<h1>Upload a Photo</h1>
+	<p>Please upload a photo with location data</p>
+	<form method="POST" enctype="multipart/form-data"> 
+	    {% csrf_token %} 
+	    {{ form.as_p }} 
+	    <input type="submit" value="Submit"> 
+	</form> 
+</body>
+</html>
