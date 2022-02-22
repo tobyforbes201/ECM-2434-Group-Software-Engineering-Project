@@ -31,3 +31,4 @@ class Image(models.Model):
     img = models.ImageField(upload_to = "images/")
     gps_coordinates = models.CharField(max_length=200)
     taken_date = models.DateTimeField()
+    score = models.IntegerField()

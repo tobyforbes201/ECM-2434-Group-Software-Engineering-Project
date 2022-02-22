@@ -17,6 +17,7 @@ def index(request):
 def upload_image(request): 
     context = {}
     #once the request has been made, process it
+    #to test this page without logging in, comment out the next two lines
     if not request.user.is_authenticated:
     	return redirect('not_authenticated')
     if request.method == "POST": 
@@ -33,7 +34,8 @@ def upload_image(request):
                                  description = desc, 
                                  img = img, 
                                  gps_coordinates = gps, 
-                                 taken_date = date_taken 
+                                 taken_date = date_taken, 
+                                 score = 0
                                  ) 
             obj.save() 
             print(obj)
