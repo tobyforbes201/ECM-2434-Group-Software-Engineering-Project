@@ -2,4 +2,5 @@
 
 requires exif library:
 	pip install exif
-	
+requires geopy library:
+	pip install geopy
