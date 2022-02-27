@@ -1,9 +1,16 @@
 """This is used to handle all the forms."""
 from django import forms
-from django.utils.safestring import mark_safe
+from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 
 from .validate import check_user_unique, validate_upper_lower, validate_special, validate_number
+
+
+class ImagefieldForm(forms.Form):
+    """The form used to upload a new image."""
+    name = forms.CharField()
+    description = forms.CharField()
+    image = forms.ImageField()
 
 
 class SignupForm(forms.Form):
@@ -14,11 +21,28 @@ class SignupForm(forms.Form):
     username = forms.CharField(validators=[check_user_unique], label="", max_length=30)
     password = forms.CharField(validators=[validate_password, validate_upper_lower,
                                            validate_special, validate_number],
-                               label="", max_length=30)
+                               label="", max_length=30, widget=forms.PasswordInput())
 
 
 class LoginForm(forms.Form):
     """The form used to log in and authenticate this existing user,
     requiring a password and username"""
-    username = forms.CharField(label=mark_safe('<br><br>Username'), max_length=30)
-    password = forms.CharField(label=mark_safe('<br><br>Password'), max_length=30)
+    username = forms.CharField(label="", max_length=30, required=True)
+    password = forms.CharField(label="", max_length=30, widget=forms.PasswordInput(), required=True)
+
+    def clean(self):
+        """This method is used to check if the user exists and is an active user.
+        This is done separately so that the error message can be displayed."""
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+        user = authenticate(username=username, password=password)
+        if not user or not user.is_active:
+            raise forms.ValidationError("username or password is incorrect.")
+        return self.cleaned_data
+
+    def login(self):
+        """This is used to authenticate the user and log in."""
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+        user = authenticate(username=username, password=password)
+        return user
