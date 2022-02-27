@@ -8,8 +8,10 @@
     <h1>Login</h1>
     <form method="post">
         {% csrf_token %}
-        {{ form }}
-        <br><br>
+        <p>Username: {{form.username}}</p>
+        <p>Password: {{form.password}}</p>
+        {{form.non_field_errors}}
+        <br>
         <input type="submit" value="Submit">
     </form>
 </body>
