@@ -1,6 +1,5 @@
 """This is to handle views, a function that takes a web request and returns a web response"""
 import datetime
-import time
 
 from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.http import HttpResponseRedirect
