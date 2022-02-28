@@ -22,10 +22,10 @@ Features currently implemented
 -------------------------------
 
 User signup and login  
-<img alt="Sign up" src="https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project/tree/readme/docs/images/signuppage.png">  
+<img alt="Sign up" src="https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project/blob/readme/docs/images/htmlimageupload1.png">  
   
 Photo uploading to database  
-<img alt="Photo uploading" src="https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project/tree/readme/docs/images/htmlimageupload1.png">  
+<img alt="Photo uploading" src="https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project/blob/readme/docs/images/htmlimageupload1.png">  
   
 Acquiring date and location metadata from photos  
 
