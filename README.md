@@ -22,10 +22,10 @@ Features currently implemented
 -------------------------------
 
 User signup and login  
-<img alt="Sign up" src="https://trello.com/1/cards/620e5dbc85c43574d0ef36b3/attachments/62173bb6511494160cce07b1/download/Signup_page.PNG">  
+<img alt="Sign up" src="https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project/tree/readme/docs/images/signuppage.png">  
   
 Photo uploading to database  
-<img alt="Photo uploading" src="https://trello.com/1/cards/620e5d50e55e6354cb1d371e/attachments/62150a35efc7cf54a853668f/download/htmlimageupload1.png">  
+<img alt="Photo uploading" src="https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project/tree/readme/docs/images/htmlimageupload1.png">  
   
 Acquiring date and location metadata from photos  
 
