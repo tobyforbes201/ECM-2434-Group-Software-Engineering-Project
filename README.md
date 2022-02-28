@@ -73,13 +73,13 @@ License
 Other info
 ----------
 
-Commits:  
-<img alt="GitHub" src="https://badgen.net/github/commits/js1294/ECM-2434-Group-Software-Engineering-Project">  
+Commit Activity:  
+<img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/y/js1294/ECM-2434-Group-Software-Engineering-Project">  
   
 Code Size:  
-<img alt="GitHub" src="https://img.shields.io/github/languages/code-size/js1294/ECM-2434-Group-Software-Engineering-Project">  
+<img alt="GitHub code size" src="https://img.shields.io/github/languages/code-size/js1294/ECM-2434-Group-Software-Engineering-Project">  
   
-Pull requests:  
-<img alt="GitHub" src="https://badgen.net/github/prs/js1294/ECM-2434-Group-Software-Engineering-Project">  
+Pull Requests:  
+<img alt="GitHub pull requests" src="https://badgen.net/github/prs/js1294/ECM-2434-Group-Software-Engineering-Project">  
 	
 
