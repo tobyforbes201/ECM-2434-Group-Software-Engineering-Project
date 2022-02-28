@@ -9,13 +9,15 @@
   <tr>
     <td>
     {% if user.is_authenticated %}
-        <a href="logout/">Logout</a>
+        <a href="logout">Logout</a>
     {% else %}
-        <a href="login/">Login</a></td>
-        <td><a href="signup/">Signup</a></td>
+        <a href="login">Login</a></td>
+        <td><a href="signup">Signup</a></td>
     {% endif %}
     <td><a href=""> Home </a></td>
-
+      {% if user.is_authenticated %}
+    <td><a href="uploadimage">Upload Images</a></td>
+    {% endif %}
   </tr>
 </table>
 {% if user.is_authenticated %}
