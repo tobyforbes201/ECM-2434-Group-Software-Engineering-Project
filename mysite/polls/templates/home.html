@@ -2,7 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <title>Home</title>
+    <style>
+        td{padding: 5px;}
+        h1{text-align: center;}
+        p{text-align: center;}
+        .central{
+          margin:auto;
+          width: 80%;
+          border: 5px;
+          padding: 5px;
+        }
+    </style>
 </head>
 <body>
 <table>
@@ -14,16 +26,22 @@
         <a href="login">Login</a></td>
         <td><a href="signup">Signup</a></td>
     {% endif %}
-    <td><a href=""> Home </a></td>
+    <td><a href="\polls"> Home </a></td>
       {% if user.is_authenticated %}
     <td><a href="uploadimage">Upload Images</a></td>
     {% endif %}
+    {% if user.is_authenticated %}
+    <td><a href="feed">Photo Feed</a></td>
+    {% endif %}
   </tr>
 </table>
-{% if user.is_authenticated %}
-    <p>Currently logged in as {{ user.get_username }}.</p>
-{% else %}
-    <p>Welcome new user please log in or signup.</p>
-{% endif %}
+<div class= "central">
+    <h1>BeautySpot</h1><br>
+    {% if user.is_authenticated %}
+        <p>Hello {{ user.get_username }}! Try completing a challenge by uploading an image and viewing it on the photo feed.</p>
+    {% else %}
+        <p>Welcome to BeautySpot, the photo-taking challenge. Please log in or signup.</p>
+    {% endif %}
+</div>
 </body>
 </html>
