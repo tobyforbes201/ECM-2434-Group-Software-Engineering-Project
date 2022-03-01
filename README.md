@@ -4,8 +4,8 @@ Developers
 -----------
 Harry Collins- https://github.com/harry-kav  
 Toby Forbes- https://github.com/tobyforbes201  
-Jason Gurung - https://github.com/jasongrg1
-Artur Kapitanczyk - https://github.com/arturkapitanczyk
+Jason Gurung - https://github.com/jasongrg1  
+Artur Kapitanczyk - https://github.com/arturkapitanczyk  
 Shalan Sharma- https://github.com/Shalan-Sharma  
 Jack Shaw- https://github.com/js1294  
 
