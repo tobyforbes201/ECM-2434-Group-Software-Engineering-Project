@@ -4,7 +4,6 @@ from django.utils.html import format_html
 
 from .models import Image
 
-
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
     """This is used for looking at all the
@@ -32,3 +31,4 @@ class ImageAdmin(admin.ModelAdmin):
         obj.save()
 
     image_tag.short_description = 'Image'
+

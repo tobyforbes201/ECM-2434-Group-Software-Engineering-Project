@@ -1,10 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <meta charset="UTF-8">
     <title>Login</title>
+    <style type="text/css">
+        td{padding: 5px;}
+        .central{
+          margin:auto;
+          width: 80%;
+          border: 5px;
+          padding: 5px;
+          text-align: center;
+        }
+        .central2{
+          display: inline-block;    
+          margin:auto;
+          border: 5px;
+          padding: 10px;
+          text-align: left;
+        }
+        input[type=button], input[type=submit], input[type=reset] {
+          background-color: white;
+          color: black;
+          border: 0.1em solid #000000;
+          padding: 0.35em 1.2em;
+          text-decoration: none;
+          margin: 0 0.3em 0.3em 0;
+          cursor: pointer;
+          transition: 0.5s;
+        }
+        input[type=file]::file-selector-button {
+          background-color: white;
+          color: black;
+          border: 0.1em solid #000000;
+          padding: 0.45em 1.3em;
+          text-decoration: none;
+          margin: 0 0.3em 0.3em 0;
+          cursor: pointer;
+          transition: 0.5s
+        }
+    </style>
 </head>
 <body>
+    <div class="central">
     <h1>Login</h1>
     <form method="post">
         {% csrf_token %}

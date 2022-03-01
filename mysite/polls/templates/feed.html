@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Photo Feed</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <style>
+    h1{text-align: center;}
+    h2{text-align: center;}
+    td{padding: 5px;}
+    .central{
+      margin:auto;
+      width: 80%;
+      border: 5px;
+      padding: 5px;
+    }
+    .central1{
+      margin:auto;
+      width: 80%;
+      border: 5px;
+      padding: 10px;
+    }
+  </style> 
+</head>
+<body>
+  <table>
+  <tr>
+    <td>
+    {% if user.is_authenticated %}
+        <a href="logout">Logout </a></td>
+    {% else %}
+        <a href="login">Login </a></td>
+        <td><a href="signup">Signup </a></td>
+    {% endif %}
+    <td><a href="\polls"> Home </a></td>
+      {% if user.is_authenticated %}
+    <td><a href="uploadimage">Upload Images </a></td>
+    {% endif %}
+    {% if user.is_authenticated %}
+    <td><a href="feed">Photo Feed </a></td>
+    {% endif %}
+  </tr>
+</table>
+<div div class = "central">
+  <div div class = "central1">
+    <h1>Photo Feed</h1>
+    <h2>Current Challenge:<br>Take the best photo on the University of Exeter campus</h2>
+  </div>
+{% for img in images %}
+  <div style="margin:auto;width:50%;border:5px;padding:5px;">
+    <h3>{{img.title}}</h3><br>
+    <img src="{{img.img.url}}" width="100%"; object-fit="cover"; object-position="bottom";/><br>
+    <h4>Photo by: {{img.user}}, taken on {{img.taken_date}}</h4><br>
+    <h5>{{img.description}}<br>Score: {{img.score}}</h5>
+  </div>
+{% endfor %}
+</div>
+</body>
+</html>

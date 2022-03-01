@@ -97,3 +97,11 @@ def logout(request):
     """A view to log out the user"""
     auth_logout(request)
     return HttpResponseRedirect('/polls/')
+
+def display_feed(request):
+    """A view to display the photo feed to users"""
+    #reverse order so latest submissions appear first- should be expanded later to make popular submissions stay near top
+    all_images = Image.objects.all().order_by('-pk')
+    #all_images = Image.objects.all()
+    return render(request, 'feed.html', {'images':all_images})
+

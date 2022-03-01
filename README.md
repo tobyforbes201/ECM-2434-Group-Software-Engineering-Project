@@ -22,25 +22,30 @@ Features currently implemented
 -------------------------------
 
 User signup and login  
-<img alt="Sign up" src="https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project/blob/readme/docs/images/signuppage.png">  
+<img alt="Sign up" src="https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project/blob/photoFeed/docs/images/signup.png">  
+<img alt="Sign in" src="https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project/blob/photoFeed/docs/images/signin.png">  
   
 Photo uploading to database  
-<img alt="Photo uploading" src="https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project/blob/readme/docs/images/htmlimageupload1.png">  
+<img alt="Photo uploading" src="https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project/blob/photoFeed/docs/images/uploadphoto.png">
+<img alt="Upload success" src="https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project/blob/photoFeed/docs/images/uploadsuccess.png">  
   
 Acquiring date and location metadata from photos  
+Photo feed with the latest and highest-rated challenge submissions  
+<img alt="Photo feed" src="https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project/blob/photoFeed/docs/images/feed1.png">  
+CSS styling  
+<img alt="CSS" src="https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project/blob/photoFeed/docs/images/feed2.png">  
+Photo moderation and removal  
+Gamekeeper/admin privileges
 
 Features to be added
 ---------------------
 
-Photo challenges that require users to traverse the university campus to meet the criteria  
-Photo feed with the latest and highest-rated challenge submissions  
+Photo challenges that require users to traverse the university campus to meet the criteria   
 Points for completing and winning challenges  
 Leaderboard  
-Stickers and tags  
-CSS styling  
-Photo moderation and removal  
-Gamekeeper/admin privileges  
+Stickers and tags    
 Expansion of challenges e.g. utilising AR  
+Expansion of CSS
 
 Requirements
 -------------
