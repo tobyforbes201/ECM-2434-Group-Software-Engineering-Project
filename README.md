@@ -22,14 +22,18 @@ Features currently implemented
 -------------------------------
 
 User signup and login  
-<img alt="Sign up" src="https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project/blob/readme/docs/images/signuppage.png">  
+<img alt="Sign up" src="https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project/blob/readme/docs/images/signup.png">
+<img alt="Sign in" src="https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project/blob/readme/docs/images/signin.png">
   
 Photo uploading to database  
-<img alt="Photo uploading" src="https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project/blob/readme/docs/images/htmlimageupload1.png">  
+<img alt="Photo uploading" src="https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project/blob/readme/docs/images/uploadphoto.png">
+<img alt="Upload success" src="https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project/blob/readme/docs/images/uploadsuccess.png">
   
 Acquiring date and location metadata from photos  
 Photo feed with the latest and highest-rated challenge submissions  
+<img alt="Photo feed" src="https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project/blob/readme/docs/images/feed1.png">
 CSS styling  
+<img alt="CSS" src="https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project/blob/readme/docs/images/feed2.png">
 Photo moderation and removal  
 Gamekeeper/admin privileges
 
