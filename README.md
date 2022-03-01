@@ -28,19 +28,20 @@ Photo uploading to database
 <img alt="Photo uploading" src="https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project/blob/readme/docs/images/htmlimageupload1.png">  
   
 Acquiring date and location metadata from photos  
+Photo feed with the latest and highest-rated challenge submissions  
+CSS styling  
+Photo moderation and removal  
+Gamekeeper/admin privileges
 
 Features to be added
 ---------------------
 
-Photo challenges that require users to traverse the university campus to meet the criteria  
-Photo feed with the latest and highest-rated challenge submissions  
+Photo challenges that require users to traverse the university campus to meet the criteria   
 Points for completing and winning challenges  
 Leaderboard  
-Stickers and tags  
-CSS styling  
-Photo moderation and removal  
-Gamekeeper/admin privileges  
+Stickers and tags    
 Expansion of challenges e.g. utilising AR  
+Expansion of CSS
 
 Requirements
 -------------
