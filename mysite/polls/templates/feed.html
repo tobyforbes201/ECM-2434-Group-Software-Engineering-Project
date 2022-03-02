@@ -20,7 +20,7 @@
       border: 5px;
       padding: 10px;
     }
-  </style> 
+  </style>
 </head>
 <body>
   <table>
@@ -38,6 +38,9 @@
     {% endif %}
     {% if user.is_authenticated %}
     <td><a href="feed">Photo Feed </a></td>
+    {% endif %}
+    {% if user.is_authenticated %}
+    <td><a href="leaderboards">Leaderboards</a></td>
     {% endif %}
   </tr>
 </table>
