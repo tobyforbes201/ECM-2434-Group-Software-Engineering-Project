@@ -50,6 +50,8 @@ def upload_image(request):
             obj.user = request.user
             obj.save()
             return redirect('successful_upload')
+        else:
+            return HttpResponse('You must be logged in to upload an image')
     # display the image upload form
     form = ImagefieldForm()
     context['form'] = form
