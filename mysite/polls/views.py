@@ -11,11 +11,13 @@ from django.http import HttpResponse
 from .forms import ImagefieldForm
 from .models import Image
 from .forms import LoginForm, SignupForm
+from .image_metadata import get_gps, get_time
 
 
-def get_img_metadata(img):
-    """A placeholder function to return location and date taken from metadata"""
-    return '1.001 1.002', datetime.datetime.now()
+def get_img_metadata(fname):
+    """A function to return location and date taken from metadata"""
+    gps_str = ' '.join(get_gps(fname))
+    return gps_str, get_time(fname)
 
 
 def not_authenticated():
