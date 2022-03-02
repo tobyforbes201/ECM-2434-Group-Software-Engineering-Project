@@ -17,7 +17,7 @@ from .image_metadata import get_gps, get_time
 def get_img_metadata(fname):
     """A function to return location and date taken from metadata"""
     gps_str = ' '.join(get_gps(fname))
-    return gps_str, get_time
+    return gps_str, get_time(fname)
 
 
 def not_authenticated():
