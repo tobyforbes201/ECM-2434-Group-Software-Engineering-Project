@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Photo Feed</title>
+  <title>Leaderboards</title>
   <meta charset="utf-8">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <style>
@@ -46,17 +46,14 @@
 </table>
 <div div class = "central">
   <div div class = "central1">
-    <h1>Photo Feed</h1>
-    <h2>Current Challenge:<br>Take the best photo on the University of Exeter campus</h2>
+    <h1>Leaderboards</h1>
   </div>
-{% for img in images %}
+{% for key, value in scores.items %}
   <div style="margin:auto;width:50%;border:5px;padding:5px;">
-    <h3>{{img.title}}</h3><br>
-    <img src="{{img.img.url}}" width="100%"; object-fit="cover"; object-position="bottom";/><br>
-    <h4>Photo by: {{img.user}}, taken on {{img.taken_date}}</h4><br>
-    <h5>{{img.description}}<br>Score: {{img.score}}</h5>
+    <h2>{{key}}</h2><br>
+    <h3>Score: {{value}}</h3>
   </div>
-{% endfor %}
+  {% endfor %}
 </div>
 </body>
 </html>

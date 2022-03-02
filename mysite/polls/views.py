@@ -1,5 +1,6 @@
 """This is to handle views, a function that takes a web request and returns a web response"""
 import datetime
+import operator
 
 from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.http import HttpResponseRedirect
@@ -105,3 +106,22 @@ def display_feed(request):
     #all_images = Image.objects.all()
     return render(request, 'feed.html', {'images':all_images})
 
+def leaderboards(request):
+    """A view to display the leaderboards"""
+    all_images = Image.objects.all()
+    score_d = {}
+    for x in all_images:
+        z = 0
+        for y in list(score_d):
+            if y == x.user:
+                z = 1
+                #if user is already in the dictionary, z = 1
+        if z == 1:
+            score_d[x.user] = score_d[x.user] + x.score
+            #if z = 1, the new score is added to the existing score for the user.
+        else:
+            score_d[x.user] = x.score
+    sorted_d = dict(sorted(score_d.items(), key=operator.itemgetter(1),reverse=True))
+    #sorting the dictionary from highest value to lowest value
+
+    return render(request, 'leaderboards.html', {'scores':sorted_d})

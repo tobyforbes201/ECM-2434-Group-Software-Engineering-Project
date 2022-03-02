@@ -36,13 +36,12 @@ CSS styling
 <img alt="CSS" src="https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project/blob/photoFeed/docs/images/feed2.png">  
 Photo moderation and removal  
 Gamekeeper/admin privileges
-
+Leaderboard
 Features to be added
 ---------------------
 
 Photo challenges that require users to traverse the university campus to meet the criteria   
-Points for completing and winning challenges  
-Leaderboard  
+Points for completing and winning challenges    
 Stickers and tags    
 Expansion of challenges e.g. utilising AR  
 Expansion of CSS
