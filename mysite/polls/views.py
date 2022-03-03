@@ -1,6 +1,7 @@
 """This is to handle views, a function that takes a web request and returns a web response"""
 import datetime
 import operator
+from pathlib import Path
 
 from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.http import HttpResponseRedirect
@@ -11,13 +12,13 @@ from django.http import HttpResponse
 from .forms import ImagefieldForm
 from .models import Image
 from .forms import LoginForm, SignupForm
-from .image_metadata import get_gps, get_time
+from .image_metadata import get_gps, get_time, get_distance
 
 
 def get_img_metadata(fname):
     """A function to return location and date taken from metadata"""
-    gps_str = ' '.join(get_gps(fname))
-    return gps_str, get_time(fname)
+    return get_gps(fname), get_time(fname)
+
 
 
 def not_authenticated():
@@ -39,18 +40,27 @@ def upload_image(request):
             name = form.cleaned_data["name"]
             desc = form.cleaned_data["description"]
             img = form.cleaned_data["image"]
-            gps, date_taken = get_img_metadata(img)
             # Create the table object
             obj = Image(
                 title=name,
                 description=desc,
                 img=img,
-                gps_coordinates=gps,
-                taken_date=date_taken,
+                gps_coordinates=(0,0),
+                taken_date=datetime.datetime.now(),
                 score=0
             )
             obj.user = request.user
             obj.save()
+
+            #adds the image metadata to the database
+            gps, date_taken = get_img_metadata(Path('.' + obj.img.url))
+            obj.gps_coordinates = gps
+            obj.taken_date = date_taken
+
+            #checks to see if the photo was taken within 2km of campus
+            if get_distance((50.7366, -3.5350) , Path('.' + obj.img.url)) > 2:
+                return HttpResponse("Photo not close enough to campus")
+
             return redirect('successful_upload')
     # display the image upload form
     form = ImagefieldForm()

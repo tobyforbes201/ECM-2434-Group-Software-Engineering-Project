@@ -71,7 +71,9 @@ A local server will be established.
 To deploy the project onto a Google Cloud server, use the following guide:  
 	https://cloud.google.com/python/django/appengine  
 	  
-Once the project is running, users will be able to navigate to the server URL and access the web-app without needing to install anything.  
+Once the project is running, users will be able to navigate to the server URL /polls (e.g. http://127.0.0.1:8000/polls/) and access the web-app without needing to install anything.  
+
+The admin account can be accessed at server URL /admin (e.g. http://127.0.0.1:8000/admin), with username: admin and password: admin
 
 License
 -------
