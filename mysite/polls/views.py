@@ -22,7 +22,6 @@ def not_authenticated():
     """If you are not authenticated (i.e. when trying to upload a photo) this displays"""
     return HttpResponse('You must be logged in to upload an image')
 
-
 def upload_image(request):
     """This is used once the request has been made, process it.
     To test this page without logging in, comment out the next two lines"""
@@ -37,6 +36,8 @@ def upload_image(request):
             name = form.cleaned_data["name"]
             desc = form.cleaned_data["description"]
             img = form.cleaned_data["image"]
+            if not img.name.endswith(".jpg"):
+                return HttpResponse('Only .jpg files allowed')
             gps, date_taken = get_img_metadata(img)
             # Create the table object
             obj = Image(
@@ -51,7 +52,7 @@ def upload_image(request):
             obj.save()
             return redirect('successful_upload')
         else:
-            return HttpResponse('You must be logged in to upload an image')
+            return HttpResponse('Only .jpg files allowed')
     # display the image upload form
     form = ImagefieldForm()
     context['form'] = form
