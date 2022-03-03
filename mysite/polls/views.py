@@ -52,10 +52,12 @@ def upload_image(request):
             obj.user = request.user
             obj.save()
 
+            #adds the image metadata to the database
             gps, date_taken = get_img_metadata(Path('.' + obj.img.url))
             obj.gps_coordinates = gps
             obj.taken_date = date_taken
 
+            #checks to see if the photo was taken within 2km of campus
             if get_distance((50.7366, -3.5350) , Path('.' + obj.img.url)) > 2:
                 return HttpResponse("Photo not close enough to campus")
 
