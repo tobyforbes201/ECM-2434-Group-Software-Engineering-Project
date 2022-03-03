@@ -27,7 +27,7 @@ class ImageAdmin(admin.ModelAdmin):
         """Overwriting the image deletion method to allow for overwriting the image."""
         obj.title = "DELETED"
         obj.description = "This image has been deleted by an administrator."
-        obj.url = "images/error.jpg"
+        obj.img = "picture/error.jpg"
         obj.save()
 
     image_tag.short_description = 'Image'
