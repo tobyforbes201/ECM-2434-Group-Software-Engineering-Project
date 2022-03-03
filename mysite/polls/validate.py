@@ -1,4 +1,5 @@
 """This is used for functions that validate values in forms."""
+
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
@@ -33,3 +34,9 @@ def validate_upper_lower(password):
     if password.islower() or password.isupper():
         raise ValidationError("Password not made up of both upper and lower characters.",
                               code='password_not_upper_lower')
+
+
+def check_image_type(image):
+    """This function is used to check if the image both an image and a jpg file."""
+    if not image.name.endswith(".jpg"):
+        raise ValidationError("The photo must use the jpg format.", code='invalid_type')

@@ -4,6 +4,7 @@ import operator
 from pathlib import Path
 
 from django.contrib.auth import login as auth_login, logout as auth_logout
+from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
@@ -20,10 +21,10 @@ def get_img_metadata(fname):
     return get_gps(fname), get_time(fname)
 
 
-
 def not_authenticated():
     """If you are not authenticated (i.e. when trying to upload a photo) this displays"""
     return HttpResponse('You must be logged in to upload an image')
+
 
 def upload_image(request):
     """This is used once the request has been made, process it.
@@ -31,7 +32,7 @@ def upload_image(request):
     context = {}
 
     if not request.user.is_authenticated:
-        return redirect('not_authenticated')
+        return redirect('login')
     if request.method == "POST":
         form = ImagefieldForm(request.POST, request.FILES)
         # Sanitize inputs
@@ -39,34 +40,38 @@ def upload_image(request):
             name = form.cleaned_data["name"]
             desc = form.cleaned_data["description"]
             img = form.cleaned_data["image"]
-            if not img.name.endswith(".jpg"):
-                return HttpResponse('Only .jpg files allowed')
             # Create the table object
             obj = Image(
                 title=name,
                 description=desc,
                 img=img,
-                gps_coordinates=(0,0),
+                gps_coordinates=(0, 0),
                 taken_date=datetime.datetime.now(),
                 score=0
             )
             obj.user = request.user
             obj.save()
 
-            #adds the image metadata to the database
-            gps, date_taken = get_img_metadata(Path('.' + obj.img.url))
-            obj.gps_coordinates = gps
-            obj.taken_date = date_taken
+            try:
+                #  Adds the image metadata to the database
+                gps, date_taken = get_img_metadata(Path('.' + obj.img.url))
+                obj.gps_coordinates = gps
+                obj.taken_date = date_taken
+            except Exception:
+                form.add_error(None, "Location data or time taken could not be found.\n"
+                                     "Please ensure GPS is on and take the photo again.")
+                obj.delete()  # image is invalid, so deleted.
+                context['form'] = form
+                return render(request, "uploadfile.html", context)
 
-            #checks to see if the photo was taken within 2km of campus
-            if get_distance((50.7366, -3.5350) , Path('.' + obj.img.url)) > 2:
-                return HttpResponse("Photo not close enough to campus")
-
-            return redirect('successful_upload')
-        else:
-            return HttpResponse('Only .jpg files allowed')
-    # display the image upload form
-    form = ImagefieldForm()
+            # Checks to see if the photo was taken within 2km of campus
+            if get_distance((50.7366, -3.5350), Path('.' + obj.img.url)) <= 2:
+                return redirect('successful_upload')
+            form.add_error(None, "Photo not close enough to campus.")
+            obj.delete()  # image is invalid, so deleted.
+    else:
+        # display the image upload form
+        form = ImagefieldForm()
     context['form'] = form
     return render(request, "uploadfile.html", context)
 
@@ -114,12 +119,14 @@ def logout(request):
     auth_logout(request)
     return HttpResponseRedirect('/polls/')
 
+
 def display_feed(request):
     """A view to display the photo feed to users"""
-    #reverse order so latest submissions appear first- should be expanded later to make popular submissions stay near top
+    # reverse order so latest submissions appear first- should be expanded later to make popular submissions stay near top
     all_images = Image.objects.all().order_by('-pk')
-    #all_images = Image.objects.all()
-    return render(request, 'feed.html', {'images':all_images})
+    # all_images = Image.objects.all()
+    return render(request, 'feed.html', {'images': all_images})
+
 
 def leaderboards(request):
     """A view to display the leaderboards"""
@@ -130,13 +137,13 @@ def leaderboards(request):
         for y in list(score_d):
             if y == x.user:
                 z = 1
-                #if user is already in the dictionary, z = 1
+                # if user is already in the dictionary, z = 1
         if z == 1:
             score_d[x.user] = score_d[x.user] + x.score
-            #if z = 1, the new score is added to the existing score for the user.
+            # if z = 1, the new score is added to the existing score for the user.
         else:
             score_d[x.user] = x.score
-    sorted_d = dict(sorted(score_d.items(), key=operator.itemgetter(1),reverse=True))
-    #sorting the dictionary from highest value to lowest value
+    sorted_d = dict(sorted(score_d.items(), key=operator.itemgetter(1), reverse=True))
+    # sorting the dictionary from highest value to lowest value
 
-    return render(request, 'leaderboards.html', {'scores':sorted_d})
+    return render(request, 'leaderboards.html', {'scores': sorted_d})
