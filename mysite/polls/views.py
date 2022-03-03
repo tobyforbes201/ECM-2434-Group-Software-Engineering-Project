@@ -12,12 +12,12 @@ from django.http import HttpResponse
 from .forms import ImagefieldForm
 from .models import Image
 from .forms import LoginForm, SignupForm
-from .image_metadata import get_gps, get_time
+from .image_metadata import get_gps, get_time, get_distance
 
 
 def get_img_metadata(fname):
     """A function to return location and date taken from metadata"""
-    return 'gps coords', get_time(fname)
+    return get_gps(fname), get_time(fname)
 
 
 
@@ -52,9 +52,12 @@ def upload_image(request):
             obj.user = request.user
             obj.save()
 
-            gps, date_taken = get_img_metadata(Path(obj.img.url))
+            gps, date_taken = get_img_metadata(Path('.' + obj.img.url))
             obj.gps_coordinates = gps
             obj.taken_date = date_taken
+
+            if get_distance((50.7366, -3.5350) , Path('.' + obj.img.url)) > 2:
+                return HttpResponse("Photo not close enough to campus")
 
             return redirect('successful_upload')
     # display the image upload form
