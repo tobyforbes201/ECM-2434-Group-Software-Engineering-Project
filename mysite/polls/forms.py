@@ -3,14 +3,16 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 
-from .validate import check_user_unique, validate_upper_lower, validate_special, validate_number
+from .validate import check_user_unique, validate_upper_lower, \
+    validate_special, validate_number, check_image_type
 
 
 class ImagefieldForm(forms.Form):
     """The form used to upload a new image."""
     name = forms.CharField(max_length=200)
-    description = forms.CharField(widget=forms.Textarea(attrs={'style': "width:100%;"}), max_length=200)
-    image = forms.ImageField()
+    description = forms.CharField(widget=forms.Textarea(attrs={'style': "width:100%;"}),
+                                  max_length=200)
+    image = forms.ImageField(validators=[check_image_type])
 
 
 class SignupForm(forms.Form):
