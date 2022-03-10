@@ -26,11 +26,7 @@ SECRET_KEY = 'django-insecure-!vs)lu8sv!ene4q8+d7waw5o)ci3(2$-6l6%ipr0dhe5i2i=%l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ENV_ALLOWED_HOST = os.environ.get('DJANGO_ALLOWED_HOST') or None
-ALLOWED_HOSTS = []
-if not DEBUG:
-    ALLOWED_HOSTS += [os.environ.get('DJANGO_ALLOWED_HOST')]
-
+ALLOWED_HOSTS = ['django-deploy-3-pnh4l.ondigitalocean.app']
 
 # Application definition
 
