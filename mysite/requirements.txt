@@ -2,3 +2,4 @@ django
 exif
 Pillow
 geopy
+gunicorn
