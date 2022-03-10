@@ -1,0 +1,4 @@
+django
+exif
+Pillow
+geopy
