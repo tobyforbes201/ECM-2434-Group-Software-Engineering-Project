@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <title>Signup</title>
+    <style type="text/css">
+        td{padding: 5px;}
+        .central{
+          margin:auto;
+          width: 80%;
+          border: 5px;
+          padding: 5px;
+          text-align: center;
+        }
+        .central2{
+          display: inline-block;    
+          margin:auto;
+          border: 5px;
+          padding: 10px;
+          text-align: left;
+        }
+        input[type=button], input[type=submit], input[type=reset] {
+          background-color: white;
+          color: black;
+          border: 0.1em solid #000000;
+          padding: 0.35em 1.2em;
+          text-decoration: none;
+          margin: 0 0.3em 0.3em 0;
+          cursor: pointer;
+          transition: 0.5s;
+        }
+        input[type=file]::file-selector-button {
+          background-color: white;
+          color: black;
+          border: 0.1em solid #000000;
+          padding: 0.45em 1.3em;
+          text-decoration: none;
+          margin: 0 0.3em 0.3em 0;
+          cursor: pointer;
+          transition: 0.5s
+        }
+    </style>
+</head>
+<body>
+    <div class = "central">
+    <h1>Signup</h1>
+    <form method="post">
+        {% csrf_token %}
+        <p>Username: {{form.username}}</p>
+        <p>Password: {{form.password}}</p>
+        <ul>
+        {% for error in form.password.errors %}
+            <li>{{error}}</li>
+        {% endfor %}
+            {% for error in form.username.errors %}
+            <li>{{error}}</li>
+        {% endfor %}
+        </ul>
+        <input type="submit" value="Submit">
+    </form>
+    <h3>Password Strength - </h3>
+    <p>To ensure a strong password they:</p>
+    <div class="central2">
+    <ul>
+        <li>must be 8 or greater characters long</li>
+        <li>must contain both upper and lower letters</li>
+        <li>must contain letters and numbers</li>
+        <li>must contain at least 1 special character</li>
+        <li>cannot be similar to the username</li>
+        <li>must not be a commonly used password</li>
+    </ul>
+</div>
+</div>
+</body>
+</html>
