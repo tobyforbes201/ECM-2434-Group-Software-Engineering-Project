@@ -21,6 +21,10 @@
 	      padding: 10px;
 	      text-align: left;
 	    }
+	    .centrenav{
+	    	margin-left: auto;
+  			margin-right: auto;
+	    }
 	    input[type=button], input[type=submit], input[type=reset] {
 		  background-color: white;
 		  color: black;
@@ -44,7 +48,8 @@
     </style>
 </head>
 <body>
-	<table>
+<div class = "central">
+<table class = "centrenav">
   <tr>
     <td>
     {% if user.is_authenticated %}
@@ -65,13 +70,13 @@
     {% endif %}
   </tr>
 </table>
-<div class = "central">
 	<h1>Upload a Photo</h1>
 	<p>Please upload a photo with location data</p>
 	<div class = "central2">
 	<form method="POST" enctype="multipart/form-data">
 	    {% csrf_token %}
 	    {{ form.as_p }}
+	    {% include 'messages.html' %}
 	    <input type="submit" value="Submit">
 	</form>
 	</div>

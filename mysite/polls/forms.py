@@ -5,6 +5,8 @@ from django.contrib.auth.password_validation import validate_password
 
 from .validate import check_user_unique, validate_upper_lower, \
     validate_special, validate_number, check_image_type
+from django.core.exceptions import ValidationError
+
 
 
 class ImagefieldForm(forms.Form):
