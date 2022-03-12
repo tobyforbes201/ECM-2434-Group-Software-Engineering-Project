@@ -2,6 +2,9 @@
 
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
+import datetime
+from exif import Image
+import os
 
 
 def check_user_unique(username):
@@ -40,3 +43,30 @@ def check_image_type(image):
     """This function is used to check if the image both an image and a jpg file."""
     if not image.name.endswith(".jpg"):
         raise ValidationError("The photo must use the jpg format.", code='invalid_type')
+
+def validate_image_size(fname):
+    """ensure that the image size is smaller than 5mb"""
+    size = os.path.getsize(fname)
+    if size > 5242880:
+        return "invalid"
+    else:
+        return "valid"
+
+def validate_metadata(fname):
+    """This function checks that gps and location metadata is included in the image."""
+    with open(fname, 'rb') as image_file:
+        my_image = Image(image_file)
+    #raise ValidationError(my_image.list_all()) #used this line to see what metadata test images have
+    if my_image.has_exif:
+        #try to find metadata- however, if the metadata does not exist at all, there is an exception
+        if my_image.gps_latitude_ref ==None or my_image.gps_latitude == None or my_image.gps_longitude_ref == None or my_image.gps_longitude == None:
+            return "missing gps"
+
+        elif my_image.datetime_original== None:
+            return "missing datetime"
+
+        else:
+            return "valid"
+    else:
+        return "missing metadata"
+

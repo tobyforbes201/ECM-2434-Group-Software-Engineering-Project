@@ -9,22 +9,47 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.http import HttpResponse
+from django.contrib import messages
 
 from .forms import ImagefieldForm
 from .models import Image
 from .forms import LoginForm, SignupForm
 from .image_metadata import get_gps, get_time, get_distance
-
+from .validate import validate_metadata, validate_image_size
 
 def get_img_metadata(fname):
     """A function to return location and date taken from metadata"""
     return get_gps(fname), get_time(fname)
 
+def is_photo_valid_for_challenge(gps, date_taken):
+    # Checks to see if the photo was taken within 2km of campus
+    #raise ValidationError(gps)
+    if get_distance((50.7366, -3.5350), gps) <= 2:
+        return True
+    else:
+        return False
+
+def delete_Image_obj(obj):
+    '''To fully delete an image object, delete the image, then the object'''
+    obj.img.delete()
+    obj.delete()
 
 def not_authenticated():
     """If you are not authenticated (i.e. when trying to upload a photo) this displays"""
     return HttpResponse('You must be logged in to upload an image')
 
+def invalid_metadata_popup(request,meta_status):
+    """If the metadata is invalid, a will explain what is missing to the user"""
+    if meta_status == "missing gps":
+        messages.info(request, 'Photo must contain location data')
+    elif meta_status == "missing datetime":
+        messages.info(request, 'Photo must contain information about when it was taken')
+    else:
+        messages.info(request, 'Photo must contain information about when and where it was taken')
+
+def invalid_image_size_popup(request, size_status):
+    if size_status == "invalid":
+        messages.info(request, 'Photo must be less than 5mb')
 
 def upload_image(request):
     """This is used once the request has been made, process it.
@@ -52,23 +77,36 @@ def upload_image(request):
             obj.user = request.user
             obj.save()
 
-            try:
-                #  Adds the image metadata to the database
+            #validate size of image, must be less than 5mb
+            size_status = validate_image_size(Path('.' + obj.img.url))
+            if size_status == "invalid":
+                delete_Image_obj(obj)
+                context['form'] = form
+                invalid_image_size_popup(request,size_status) #message tells user of size error
+                return render(request, "uploadfile.html", context) #refresh page
+            #validate metadata
+            meta_status = validate_metadata(Path('.' + obj.img.url))
+            #add image metadata to database
+            if meta_status == "valid":
                 gps, date_taken = get_img_metadata(Path('.' + obj.img.url))
                 obj.gps_coordinates = gps
                 obj.taken_date = date_taken
-            except Exception:
-                form.add_error(None, "Location data or time taken could not be found.\n"
-                                     "Please ensure GPS is on and take the photo again.")
+            #if metadata is invalid then reject the submission
+            else:
+                delete_Image_obj(obj) #image is invalid so is deleted
+                context['form'] = form
+                invalid_metadata_popup(request,meta_status) #message tells user what metadata is missing
+                return render(request, "uploadfile.html", context) #refresh page
+
+            if is_photo_valid_for_challenge(gps, date_taken):
+                return redirect('successful_upload')
+            else:
+                messages.info(request, 'Photo is either too far from challenge location or was taken outside the challenge timeframe')
+                obj.img.delete()
                 obj.delete()  # image is invalid, so deleted.
+
                 context['form'] = form
                 return render(request, "uploadfile.html", context)
-
-            # Checks to see if the photo was taken within 2km of campus
-            if get_distance((50.7366, -3.5350), Path('.' + obj.img.url)) <= 2:
-                return redirect('successful_upload')
-            form.add_error(None, "Photo not close enough to campus.")
-            obj.delete()  # image is invalid, so deleted.
     else:
         # display the image upload form
         form = ImagefieldForm()

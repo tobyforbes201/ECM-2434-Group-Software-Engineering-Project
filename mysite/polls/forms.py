@@ -2,6 +2,7 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 
 from .validate import check_user_unique, validate_upper_lower, \
     validate_special, validate_number, check_image_type
