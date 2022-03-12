@@ -44,3 +44,14 @@ def get_time(fname):
     if my_image.has_exif:
         return my_image.datetime_original
     raise Exception
+
+
+def get_time_dif(starting_time, fname):
+    """A function that gets the time difference between when a photo
+     was taken and a time of choice in format datetime."""
+    difference = starting_time - datetime.datetime.strptime(get_time(fname),
+                                                            "%Y:%m:%d %H:%M:%S")
+    # converts the string into a datetime object
+    datetime.timedelta(0, 8, 562000)
+    seconds_in_day = 24 * 60 * 60
+    return (difference.days * seconds_in_day + difference.seconds) / 60
