@@ -25,6 +25,7 @@ def is_photo_valid_for_challenge(gps, date_taken):
     """Checks to see if the photo was taken within 2km of campus
     raise ValidationError(gps)."""
     if get_distance((50.7366, -3.5350), gps) <= 2:
+        # After this, the date should also be validated.
         return True
     return False
 
