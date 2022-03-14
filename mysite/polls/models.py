@@ -11,7 +11,7 @@ image_storage = FileSystemStorage(
 )
 
 def image_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/feed/picture/<filename>
+    """File will be uploaded to MEDIA_ROOT/feed/picture/<filename>."""
     return u'picture/{0}'.format(filename)
 
 class Image(models.Model):
@@ -27,11 +27,5 @@ class Image(models.Model):
     score = models.IntegerField()
 
     class Meta():
+        """The meta information for the Image class."""
         db_table = "polls_image"
-
-#class GetImage(models.Model):
-    """A model that extracts images from the Image model"""
- #   title = models.CharField(max_length=200)
- #   img = models.ImageField(upload_to="image")
- #   class Meta():
- #       db_table = "polls_image"
