@@ -7,6 +7,7 @@ from .validate import check_user_unique, validate_upper_lower, \
     validate_special, validate_number, check_image_type
 
 
+
 class ImagefieldForm(forms.Form):
     """The form used to upload a new image."""
     name = forms.CharField(max_length=200)

@@ -20,10 +20,17 @@
       border: 5px;
       padding: 10px;
     }
+    .centrenav{
+        margin-left: auto;
+        margin-right: auto;
+    }
+
   </style>
 </head>
 <body>
-  <table>
+<div div class = "central">
+  <div div class = "central1">
+    <table class = "centrenav">
   <tr>
     <td>
     {% if user.is_authenticated %}
@@ -44,8 +51,6 @@
     {% endif %}
   </tr>
 </table>
-<div div class = "central">
-  <div div class = "central1">
     <h1>Leaderboards</h1>
   </div>
 {% for key, value in scores.items %}

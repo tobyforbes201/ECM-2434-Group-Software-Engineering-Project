@@ -31,4 +31,3 @@ class ImageAdmin(admin.ModelAdmin):
         obj.save()
 
     image_tag.short_description = 'Image'
-

@@ -29,10 +29,10 @@ def get_long(ref, long):
     return -(long[0] + (long[1] / 60) + (long[2] / 3600))
 
 
-def get_distance(starting_point, fname):
+def get_distance(starting_point, end_point):
     """A function that gets the distance in km between the location of
      a photo and a GPS location in form (latitude, longitude) in decimal"""
-    return geopy.distance.distance(starting_point, get_gps(fname)).km
+    return geopy.distance.distance(starting_point, end_point).km
 
 
 def get_time(fname):
@@ -42,7 +42,7 @@ def get_time(fname):
         my_image = Image(image_file)
 
     if my_image.has_exif:
-        return my_image.datetime
+        return my_image.datetime_original
     raise Exception
 
 
