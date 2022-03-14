@@ -96,7 +96,7 @@ def upload_image(request):
             if meta_status == "valid":
                 gps, date_taken = get_img_metadata(Path('.' + obj.img.url))
                 obj.gps_coordinates = gps
-                obj.taken_date = date_taken
+                obj.taken_date = datetime.datetime.strptime(date_taken, '%Y:%m:%d %H:%M:%S')
             # if metadata is invalid then reject the submission
             else:
                 delete_image_obj(obj)  # image is invalid so is deleted
@@ -113,6 +113,7 @@ def upload_image(request):
             obj.delete()  # image is invalid, so deleted.
             context['form'] = form
             return render(request, "uploadfile.html", context)
+
     else:
         # display the image upload form
         form = ImagefieldForm()
