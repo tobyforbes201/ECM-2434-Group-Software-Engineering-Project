@@ -1,4 +1,6 @@
 """This is used for creating the schema to the database."""
+from inspect import _SourceObjectType
+from unicodedata import name
 from django.db import models
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
@@ -11,8 +13,20 @@ image_storage = FileSystemStorage(
 )
 
 def image_directory_path(instance, filename):
-    """File will be uploaded to MEDIA_ROOT/feed/picture/<filename>."""
+    # file will be uploaded to MEDIA_ROOT/feed/picture/<filename>
     return u'picture/{0}'.format(filename)
+
+
+class Challenge(models.Model):
+    """A model used to store challenges"""
+    name = models.CharField(max_length=200)
+    description = models.CharField(max_length=200)
+    location = models.CharField(max_length=200)
+    locationRadius = models.IntegerField()
+    subject = models.CharField(max_length=200)
+    startDate = models.DateTimeField()
+    endDate = models.DateTimeField()
+
 
 class Image(models.Model):
     """A model used to store images and other related information."""
@@ -26,6 +40,14 @@ class Image(models.Model):
     taken_date = models.DateTimeField()
     score = models.IntegerField()
 
+    
+
     class Meta():
-        """The meta information for the Image class."""
         db_table = "polls_image"
+
+#class GetImage(models.Model):
+    """A model that extracts images from the Image model"""
+ #   title = models.CharField(max_length=200)
+ #   img = models.ImageField(upload_to="image")
+ #   class Meta():
+ #       db_table = "polls_image"
