@@ -6,3 +6,6 @@ class PollsConfig(AppConfig):
 	"""Configure the polls application which we are basing our web-app on"""
 	default_auto_field = 'django.db.models.BigAutoField'
 	name = 'polls'
+
+	def ready(self):
+		import polls.signals

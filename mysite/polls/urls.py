@@ -15,6 +15,12 @@ urlpatterns = [
     path('feed', views.display_feed, name='feed'),
     path('leaderboards', views.leaderboards, name='leaderboards'),
     path('', views.home, name='home'),
+    path('profile', views.profile, name='profile'),
+    path('viewprofile/<username>', views.view_profile, name='viewprofile'),
+    path('vote/<photo_id>', views.vote, name='vote'),
+    path('unvote/<photo_id>', views.unvote, name='unvote'),
+    path('deletephoto/<photo_id>',views.delete_photo,name='deletephoto'),
+    path('deleteuser/<username>',views.delete_account,name='deleteuser'),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 
 #set the media roots

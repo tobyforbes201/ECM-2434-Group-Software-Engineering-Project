@@ -20,11 +20,12 @@
       border: 5px;
       padding: 10px;
     }
-    .centrenav{
-      position: relative;
-      float: right;
-      margin-right: auto
-      margin-left: auto;
+    .profile{
+      height: 10em;
+      width: auto;
+      display: inline-block;
+      clip-path: circle();
+      margin: 0 0.3em 0.3em 0;
     }
     .profile_feed{
       height: 3em;
@@ -33,6 +34,32 @@
       display: inline-block;
       margin: 0 0.3em 0.3em 0;
       padding: 0.1em 0.1em;
+    }
+    .centrenav{
+        position: relative;
+        float: right;
+        margin-right: auto
+        margin-left: auto;
+    }
+    input[type=button], input[type=submit], input[type=reset]{
+      background-color: white;
+      color: black;
+      border: 0.1em solid #000000;
+      padding: 0.35em 1.2em;
+      text-decoration: none;
+      margin: 0 0.3em 0.3em 0;
+      cursor: pointer;
+      transition: 0.5s;
+    }
+    input[type=file]::file-selector-button {
+      background-color: white;
+      color: black;
+      border: 0.1em solid #000000;
+      padding: 0.45em 1.3em;
+      text-decoration: none;
+      margin: 0 0.3em 0.3em 0;
+      cursor: pointer;
+      transition: 0.5s
     }
     /* Dropdown Button */
         .dropbtn {
@@ -102,17 +129,7 @@
     </script>
 </head>
 <body>
-{% if user.is_authenticated %}
-<div class="dropdown">
-  <button onclick="dropDown()" class="dropbtn">My Account</button>
-  <div id="myDropdown" class="dropdown-content">
-    <a href="{% url 'viewprofile' user.get_username %}">My Profile</a>
-    <a href="profile">Manage Account and Photos</a>
-    <a href="logout">Logout</a>
-  </div>
-</div>
-{% endif %}
-  <table class="centrenav">
+  <table class = "centrenav">
   <tr>
     <td>
     {% if user.is_authenticated %}
@@ -133,35 +150,44 @@
     {% endif %}
   </tr>
 </table>
+{% if user.is_authenticated %}
+<div class="dropdown">
+  <button onclick="dropDown()" class="dropbtn">My Account</button>
+  <div id="myDropdown" class="dropdown-content">
+    <a href="{% url 'viewprofile' user.get_username %}">My Profile</a>
+    <a href="profile">Manage Account and Photos</a>
+    <a href="logout">Logout</a>
+  </div>
+</div>
+{% endif %}
 <div div class = "central">
   <div div class = "central1">
-    <h1>Photo Feed</h1>
-    <h2>Current Challenge:<br>Take the best photo on the University of Exeter campus</h2>
+    <h1>Profile</h1>
+    <h2>{{ user.get_username }}<br><img class="profile" src="{{ user.profile.img.url }}"></h2>
   </div>
+<form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset>
+            <legend>Total points</legend>
+            <h5>{{ score }}</h5>
+            <legend>Number of photos</legend>
+            <h5>{{ total_photos }}</h5>
+            <legend>Manage account</legend>
+            <h5><a href="{% url 'deleteuser' user.get_username %}" onclick="return confirm('Are you sure?')">Delete account</a></h5>
+            <legend>Edit profile picture</legend>
+            {{ p_form }} <!-- Profile form -->
+        </fieldset>
+        <div class="form-group">
+            <button class="btn btn-outline-info" type="submit">Update</button>
+        </div>
+    </form>
 {% for img in images %}
   <div style="margin:auto;width:50%;border:5px;padding:5px;">
     <h3>{{img.title}}</h3><br>
     <img src="{{img.img.url}}" width="100%"; object-fit="cover"; object-position="bottom";/><br>
-    <h4><a href="{% url 'viewprofile' img.user.get_username %}"><img class= "profile_feed" src="{{ img.user.profile.img.url }}"></a>Photo by: {{img.user}}</h4><br>
+    <h4><img class= "profile_feed" src="{{ img.user.profile.img.url }}">Photo by: {{img.user}}</h4><br>
     <h5>Taken on {{img.taken_date}}<br><br>{{img.description}}<br><br>Score: {{img.score}}</h5>
-
-    {% if user in img.user_votes.all %}
-    <form action="{% url 'unvote' img.id  %}" method="post" name="vote" id="voteform">
-        {% csrf_token %}
-        <button type='submit' name='vote' value="{{ img.id }}" class="btn btn-primary">Remove vote</button>
-    </form>
-    {% else %}    
-
-    {% if user == img.user %}
-
-    {% else %}
-    <form action="{% url 'vote' img.id  %}" method="post" name="vote" id="voteform">
-        {% csrf_token %}
-        <button type='submit' name='vote' value="{{ img.id }}" class="btn btn-primary">Vote</button>
-    </form>
-    {% endif %}
-
-{% endif %}
+    <a href="{% url 'deletephoto' img.id %}" onclick="return confirm('Are you sure?')"> Delete</a>
   </div>
 {% endfor %}
 </div>
