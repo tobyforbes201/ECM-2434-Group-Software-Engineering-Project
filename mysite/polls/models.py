@@ -14,6 +14,17 @@ def image_directory_path(instance, filename):
     """File will be uploaded to MEDIA_ROOT/feed/picture/<filename>."""
     return u'picture/{0}'.format(filename)
 
+class Challenge(models.Model):
+    """A model used to store challenges"""
+    name = models.CharField(max_length=200)
+    description = models.CharField(max_length=200)
+    location = models.CharField(max_length=200)
+    locationRadius = models.IntegerField()
+    subject = models.CharField(max_length=200)
+    startDate = models.DateTimeField()
+    endDate = models.DateTimeField()
+
+
 class Image(models.Model):
     """A model used to store images and other related information."""
     user = models.ForeignKey(
@@ -29,3 +40,10 @@ class Image(models.Model):
     class Meta():
         """The meta information for the Image class."""
         db_table = "polls_image"
+
+
+
+
+
+    
+
