@@ -1,0 +1,6 @@
+django
+exif
+Pillow
+geopy
+gunicorn
+psycopg2
