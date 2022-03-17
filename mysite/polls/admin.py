@@ -2,7 +2,10 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
-from .models import Image
+from .models import Image, Profile
+
+# register user profiles
+admin.site.register(Profile)
 
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
@@ -17,7 +20,7 @@ class ImageAdmin(admin.ModelAdmin):
     def image_tag(self, img):
         """This is used to create a displayable image."""
         return format_html('<img src="{url}" width="150" height="150"/>'
-                           .format(url=img.image.url))
+                           .format(url=img.img.url))
 
     def has_add_permission(self, request, obj=None):
         """This is used to update add permissions to false."""
@@ -31,3 +34,4 @@ class ImageAdmin(admin.ModelAdmin):
         obj.save()
 
     image_tag.short_description = 'Image'
+    

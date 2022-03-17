@@ -10,8 +10,8 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.contrib import messages
 
-from .models import Image
-from .forms import LoginForm, SignupForm, ImagefieldForm
+from .models import Image, Vote
+from .forms import LoginForm, SignupForm, ImagefieldForm, ProfileUpdateForm
 from .image_metadata import get_gps, get_time, get_distance
 from .validate import validate_metadata, validate_image_size
 
@@ -106,6 +106,7 @@ def upload_image(request):
                 return render(request, "uploadfile.html", context)  # refresh page
 
             if is_photo_valid_for_challenge(gps, date_taken):
+                obj.save()
                 return redirect('successful_upload')
             messages.info(request, 'Photo is either too far from challenge'
                                    ' location or was taken outside the challenge timeframe')
@@ -192,3 +193,116 @@ def leaderboards(request):
     # Sorting the dictionary from the highest value to the lowest value
 
     return render(request, 'leaderboards.html', {'scores': sorted_d})
+
+def profile(request):
+    """where a user can manage their account, including account and post deletion
+    and changing profile pictures"""
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    user_images = Image.objects.filter(user=request.user)
+    score = 0
+    total_photos = 0
+    for image in user_images:
+        score+=image.score
+        total_photos+=1
+    if request.method == 'POST':
+        p_form = ProfileUpdateForm(request.POST,
+                                   request.FILES,
+                                   instance=request.user.profile)
+        if p_form.is_valid():
+            p_form.save()
+            return redirect('profile') # Redirect back to profile page
+
+    else:
+        p_form = ProfileUpdateForm(instance=request.user.profile)
+
+    context = {
+        'p_form': p_form,
+        'images':user_images,
+        'score':score,
+        'total_photos':total_photos
+    }
+
+    return render(request, 'profile.html', context)
+
+def view_profile(request, username=None):
+    """view a user's profile"""
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    user = User.objects.get(username=username)
+    user_images = Image.objects.filter(user=user)
+    score = 0
+    total_photos = 0
+    for image in user_images:
+        score+=image.score
+        total_photos+=1
+
+    context = {
+        'images':user_images,
+        'score':score,
+        'total_photos':total_photos,
+        'view_user':user
+    }
+
+    return render(request, 'viewprofile.html', context)
+
+def delete_photo(request,photo_id=None):
+    """delete a user's photo by replacing it with a placeholder"""
+    photo_to_delete=Image.objects.get(id=photo_id)
+    photo_to_delete.img = str(Path('./picture/error.jpg'))
+    photo_to_delete.title = "This photo was removed"
+    photo_to_delete.description = "User deleted the photo"
+    photo_to_delete.save()
+
+    return redirect('profile')
+
+def delete_account(request,username=None):
+    """delete a user's account"""
+    user_to_delete=User.objects.get(username=username)
+    user_images = Image.objects.filter(user=user_to_delete)
+    for img in user_images:
+        img.delete()
+    user_to_delete.delete()
+
+    return HttpResponseRedirect('/polls/')
+
+def vote(request, photo_id):
+    """user votes for a photo"""
+    if request.method == "POST":
+        # make sure user can't like the photo more than once.
+        user = User.objects.get(username=request.user.username)
+        # find whatever photo is associated with vote
+        photo = Image.objects.get(id=photo_id)
+
+        new_vote = Vote(user=user, image=photo)
+        new_vote.already_voted = True
+
+        photo.score += 10
+        #adds user to photoS
+        photo.user_votes.add(user)
+        photo.save()
+        new_vote.save()
+        return redirect('feed')
+    return redirect('feed')
+
+def unvote(request, photo_id):
+    """user revokes their vote for a photo"""
+    if request.method == "POST":
+        # make sure user can't like the photo more than once.
+        user = User.objects.get(username=request.user.username)
+        # find whatever post is associated with vote
+        photo = Image.objects.get(id=photo_id)
+
+        revoke_vote = Vote.objects.get(user=user, image=photo)
+        # delete the vote
+        revoke_vote.delete()
+
+        photo.score -= 10
+        #remove user from photo
+        photo.user_votes.remove(user)
+        photo.save()
+
+        return redirect('feed')
+    return redirect('feed')
