@@ -30,9 +30,9 @@
     <h1>Leaderboards</h1>
   </div>
 {% for key, value in scores.items %}
-  <div style="margin:auto;width:50%;border:5px;padding:5px;">
-    <h2>{{key}}</h2><br>
-    <h3>Score: {{value}}</h3>
+  <div style="margin:auto;width:50%;border:5px;padding:5px;text-align: center;">
+    <legend><h3><img src="{{key.profile.img.url}}" class="profile_feed">{{key.get_username}}</h3>
+    <h4><u>Score: {{value}}</u></h4></legend>
   </div>
   {% endfor %}
 </div>

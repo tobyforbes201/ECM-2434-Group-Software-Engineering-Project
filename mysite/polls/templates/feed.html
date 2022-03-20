@@ -35,11 +35,11 @@
     <p>Current Challenge:<br>Take the best photo on the University of Exeter campus</p>
   </div>
 {% for img in images %}
-  <div>
+  <div style="margin:auto;width:50%;border:5px;padding:5px;">
     <h3>{{img.title}}</h3><br>
-    <img src="{{img.img.url}}" class="img-responsive" style="max-height:80vh;max-width:80vw"; object-fit="cover"; object-position="bottom";/><br>
-    <h4><img class= "profile_feed" src="{{ img.user.profile.img.url }}">Photo by: {{img.user}}, taken on {{img.taken_date}}</h4><br>
-    <h5>{{img.description}}<br>Score: {{img.score}}</h5>
+    <img src="{{img.img.url}}" width="100%"; object-fit="cover"; object-position="bottom";/><br>
+    <h4><a href="{% url 'viewprofile' img.user.get_username %}"><img class= "profile_feed" src="{{ img.user.profile.img.url }}"></a>Photo by: {{img.user}}</h4><br>
+    <h5>Taken on {{img.taken_date}}<br><br>{{img.description}}<br><br>Score: {{img.score}}</h5>
   </div>
 
     {% if user in img.user_votes.all %}
