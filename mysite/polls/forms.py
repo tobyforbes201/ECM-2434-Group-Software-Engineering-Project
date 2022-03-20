@@ -27,6 +27,7 @@ class SignupForm(forms.Form):
     password = forms.CharField(validators=[validate_password, validate_upper_lower,
                                            validate_special, validate_number],
                                label="", max_length=30, widget=forms.PasswordInput())
+    checkbox = forms.BooleanField()
 
 
 class LoginForm(forms.Form):
