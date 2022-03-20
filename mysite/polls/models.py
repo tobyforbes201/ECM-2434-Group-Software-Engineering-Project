@@ -59,7 +59,7 @@ class Profile(models.Model):
         super(Profile, self).save(*args, **kwargs)
 
         img = PilImage.open(self.img.path) # Open image
-        
+
         # resize image
         if img.height > 300 or img.width > 300:
             output_size = (300, 300)

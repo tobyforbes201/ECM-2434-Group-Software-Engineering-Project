@@ -140,8 +140,8 @@ def signup(request):
             password = form.cleaned_data['password']
             User.objects.create_user(username=username,
                                      password=password)
-            return HttpResponseRedirect('/polls/login')  
-    else: 
+            return HttpResponseRedirect('/polls/login')
+    else:
         form = SignupForm()
     return render(request, 'signup.html', {'form': form})
 
