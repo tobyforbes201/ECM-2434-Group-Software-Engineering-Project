@@ -1,147 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Leaderboards</title>
   <meta charset="utf-8">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <style>
-    h1{text-align: center;}
-    h2{text-align: center;}
-    td{padding: 5px;}
-    .central{
-      margin:auto;
-      width: 80%;
-      border: 5px;
-      padding: 5px;
-    }
-    .central1{
-      margin:auto;
-      width: 80%;
-      border: 5px;
-      padding: 10px;
-    }
-    .profile_feed{
-      height: 3em;
-      width: auto;
-      clip-path: circle();
-      display: inline-block;
-      margin: 0 0.3em 0.3em 0;
-      padding: 0.1em 0.1em;
-    }
-    .centrenav{
-        position: relative;
-        float: right;
-        margin-right: auto
-        margin-left: auto;
-    }
-    /* Dropdown Button */
-        .dropbtn {
-          background-color: #3498DB;
-          color: white;
-          padding: 16px;
-          font-size: 16px;
-          border: none;
-          cursor: pointer;
-        }
-
-        /* Dropdown button on hover & focus */
-        .dropbtn:hover, .dropbtn:focus {
-          background-color: #2980B9;
-        }
-
-        /* The container <div> - needed to position the dropdown content */
-        .dropdown {
-          position: relative;
-          display: inline-block;
-        }
-
-        /* Dropdown Content (Hidden by Default) */
-        .dropdown-content {
-          display: none;
-          position: absolute;
-          background-color: #f1f1f1;
-          min-width: 160px;
-          box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-          z-index: 1;
-        }
-
-        /* Links inside the dropdown */
-        .dropdown-content a {
-          color: black;
-          padding: 12px 16px;
-          text-decoration: none;
-          display: block;
-        }
-
-        /* Change color of dropdown links on hover */
-        .dropdown-content a:hover {background-color: #ddd}
-
-        /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
-        .show {display:block;}
-
-  </style>
-      <script>
-        /* When the user clicks on the button,
-        toggle between hiding and showing the dropdown content */
-        function dropDown() {
-          document.getElementById("myDropdown").classList.toggle("show");
-        }
-
-        // Close the dropdown menu if the user clicks outside of it
-        window.onclick = function(event) {
-          if (!event.target.matches('.dropbtn')) {
-            var dropdowns = document.getElementsByClassName("dropdown-content");
-            var i;
-            for (i = 0; i < dropdowns.length; i++) {
-              var openDropdown = dropdowns[i];
-              if (openDropdown.classList.contains('show')) {
-                openDropdown.classList.remove('show');
-              }
-            }
-          }
-        }
-    </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <link href="./media/static/style.css" rel="stylesheet">
+  <title>Leaderboards</title>
 </head>
 <body>
-{% if user.is_authenticated %}
-<div class="dropdown">
-  <button onclick="dropDown()" class="dropbtn">My Account</button>
-  <div id="myDropdown" class="dropdown-content">
-    <a href="{% url 'viewprofile' user.get_username %}">My Profile</a>
-    <a href="profile">Manage Account and Photos</a>
-    <a href="logout">Logout</a>
-  </div>
-</div>
+{% if not user.is_authenticated %}
+<meta http-equiv="refresh" content="0; URL=/polls" />
 {% endif %}
-  <table class = "centrenav">
-  <tr>
-    <td>
-    {% if user.is_authenticated %}
-
-    {% else %}
-        <a href="login">Login </a></td>
-        <td><a href="signup">Signup </a></td>
-    {% endif %}
-    <td><a href="\polls"> Home </a></td>
-      {% if user.is_authenticated %}
-    <td><a href="uploadimage">Upload Images </a></td>
-    {% endif %}
-    {% if user.is_authenticated %}
-    <td><a href="feed">Photo Feed </a></td>
-    {% endif %}
-    {% if user.is_authenticated %}
-    <td><a href="leaderboards">Leaderboards</a></td>
-    {% endif %}
-  </tr>
-</table>
-<div div class = "central">
-  <div div class = "central1">
+<nav class="navbar navbar-dark" style="background-color: #e3f2fd;width:100vw">
+	<div class="container-fluid">
+	  <div class="column">
+    	<a href="uploadimage" class="navbar-nav mr-auto"><img alt="Upload Image" src="./media/static/upload.png" class="img-responsive" style="max-height:5%"></a>
+	  </div>
+	  <div class="column">
+    	<a href="feed" class="navbar-nav mr-auto"><img alt="Photo Feed" src="./media/static/feed.png" class="img-responsive" style="max-height:5%"></a>
+	  </div>
+	  <div class="column">
+    	<a href="leaderboards" class="navbar-nav mr-auto"><img alt="Leaderboard" src="./media/static/podium.png" class="img-responsive" style="max-height:5%"></a>
+	  </div>
+	  <div class="column">
+    	<a href="profile" class="navbar-nav mr-auto"><img alt="Profile" src="./media/static/user.png" class="img-responsive" ></a>
+	  </div>
+	</div>
+</nav>
     <h1>Leaderboards</h1>
   </div>
 {% for key, value in scores.items %}
-  <div style="margin:auto;width:50%;border:5px;padding:5px;text-align: center;">
-    <legend><h3><img src="{{key.profile.img.url}}" class="profile_feed">{{key.get_username}}</h3>
-    <h4><u>Score: {{value}}</u></h4></legend>
+  <div style="margin:auto;width:50%;border:5px;padding:5px;">
+    <h2>{{key}}</h2><br>
+    <h3>Score: {{value}}</h3>
   </div>
   {% endfor %}
 </div>
