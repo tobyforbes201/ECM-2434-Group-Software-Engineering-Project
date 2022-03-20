@@ -38,7 +38,7 @@
   <div>
     <h3>{{img.title}}</h3><br>
     <img src="{{img.img.url}}" class="img-responsive" style="max-height:80vh;max-width:80vw"; object-fit="cover"; object-position="bottom";/><br>
-    <h4>Photo by: {{img.user}}, taken on {{img.taken_date}}</h4><br>
+    <h4><img class= "profile_feed" src="{{ img.user.profile.img.url }}">Photo by: {{img.user}}, taken on {{img.taken_date}}</h4><br>
     <h5>{{img.description}}<br>Score: {{img.score}}</h5>
   </div>
 
