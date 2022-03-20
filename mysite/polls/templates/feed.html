@@ -41,6 +41,24 @@
     <h4>Photo by: {{img.user}}, taken on {{img.taken_date}}</h4><br>
     <h5>{{img.description}}<br>Score: {{img.score}}</h5>
   </div>
+
+    {% if user in img.user_votes.all %}
+    <form action="{% url 'unvote' img.id  %}" method="post" name="vote" id="voteform">
+        {% csrf_token %}
+        <button type='submit' name='vote' value="{{ img.id }}" class="btn btn-primary">Remove vote</button>
+    </form>
+    {% else %}    
+
+    {% if user == img.user %}
+
+    {% else %}
+    <form action="{% url 'vote' img.id  %}" method="post" name="vote" id="voteform">
+        {% csrf_token %}
+        <button type='submit' name='vote' value="{{ img.id }}" class="btn btn-primary">Vote</button>
+    </form>
+    {% endif %}
+
+{% endif %}
 {% endfor %}
 </div>
 </body>
