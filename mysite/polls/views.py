@@ -130,18 +130,16 @@ def successful_upload(request):
 def signup(request):
     """A view for registration of a new user. If the form passes the validators,
     a new user will be created. By default, the password is both hashed and salted."""
-    agreement = False
     if request.method == 'POST':
         form = SignupForm(request.POST)
-        agreement = request.POST.get("checkbox", False)
-        if form.is_valid() and (agreement != False):
+        if form.is_valid():
             # Sanitise the inputs
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             User.objects.create_user(username=username,
                                      password=password)
-            return HttpResponseRedirect('/polls/login')  
-    else: 
+            return HttpResponseRedirect('/polls/login')
+    else:
         form = SignupForm()
     return render(request, 'signup.html', {'form': form})
 
