@@ -1,9 +1,12 @@
 """This is used for creating the schema to the database."""
+from datetime import datetime
 from django.db import models
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.models import User
 from PIL import Image as PilImage
+from django.utils import timezone
+
 
 image_storage = FileSystemStorage(
     # Physical file location ROOT
@@ -25,10 +28,22 @@ class Challenge(models.Model):
     subject = models.CharField(max_length=200)
     startDate = models.DateTimeField()
     endDate = models.DateTimeField()
+ 
+
+    def is_active(self):       
+        if self.startDate < timezone.now() < self.endDate:
+            return True
+        else: 
+            return False
+
+    def __str__(self):
+        # how the model is displayed
+        return f'{self.name}'
 
 
 class Image(models.Model):
     """A model used to store images and other related information."""
+    challenge = models.ForeignKey(Challenge, on_delete=models.CASCADE, related_name="challenges", default = 1)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,related_name="author")
