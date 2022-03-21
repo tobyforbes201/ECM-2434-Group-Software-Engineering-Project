@@ -1,21 +1,24 @@
 """This is used to handle all the forms."""
 from django import forms
+from django.forms import ModelChoiceField
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 
 from .validate import check_user_unique, validate_upper_lower, \
     validate_special, validate_number, check_image_type
 
-from .models import Profile
+from .models import Profile, Challenge
 
-
+    
 
 class ImagefieldForm(forms.Form):
     """The form used to upload a new image."""
     name = forms.CharField(max_length=200)
+    challenge = forms.ModelChoiceField(queryset = Challenge.objects.all(), initial = 0)
     description = forms.CharField(widget=forms.Textarea(attrs={'style': "width:100%;"}),
                                   max_length=200)
     image = forms.ImageField(validators=[check_image_type])
+    
 
 
 class SignupForm(forms.Form):
@@ -27,7 +30,6 @@ class SignupForm(forms.Form):
     password = forms.CharField(validators=[validate_password, validate_upper_lower,
                                            validate_special, validate_number],
                                label="", max_length=30, widget=forms.PasswordInput())
-    checkbox = forms.BooleanField()
 
 
 class LoginForm(forms.Form):
