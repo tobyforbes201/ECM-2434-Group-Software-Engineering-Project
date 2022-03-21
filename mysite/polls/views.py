@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.contrib import messages
 
-from .models import Image, Vote
+from .models import Image, Vote, Challenge
 from .forms import LoginForm, SignupForm, ImagefieldForm, ProfileUpdateForm
 from .image_metadata import get_gps, get_time, get_distance
 from .validate import validate_metadata, validate_image_size
@@ -62,17 +62,22 @@ def upload_image(request):
     To test this page without logging in, comment out the next two lines"""
     context = {}
 
+
     if not request.user.is_authenticated:
         return redirect('login')
     if request.method == "POST":
+
         form = ImagefieldForm(request.POST, request.FILES)
         # Sanitize inputs
+
         if form.is_valid():
+            challenge = form.cleaned_data["challenge"]
             name = form.cleaned_data["name"]
             desc = form.cleaned_data["description"]
             img = form.cleaned_data["image"]
             # Create the table object
             obj = Image(
+                challenge = challenge,
                 title=name,
                 description=desc,
                 img=img,
@@ -118,8 +123,10 @@ def upload_image(request):
     else:
         # display the image upload form
         form = ImagefieldForm()
-    context['form'] = form
+     
+    context['form'] = form 
     return render(request, "uploadfile.html", context)
+
 
 
 def successful_upload(request):
@@ -173,6 +180,8 @@ def display_feed(request):
     all_images = Image.objects.all().order_by('-pk')
     # all_images = Image.objects.all()
     return render(request, 'feed.html', {'images': all_images})
+
+
 
 
 def leaderboards(request):
