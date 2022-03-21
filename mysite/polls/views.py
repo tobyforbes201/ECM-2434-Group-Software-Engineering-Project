@@ -7,10 +7,9 @@ from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from django.http import HttpResponse
 from django.contrib import messages
 
-from .models import Image, Vote
+from .models import Image, Vote, Badge
 from .forms import LoginForm, SignupForm, ImagefieldForm, ProfileUpdateForm
 from .image_metadata import get_gps, get_time, get_distance
 from .validate import validate_metadata, validate_image_size
@@ -36,9 +35,15 @@ def delete_image_obj(obj):
     obj.delete()
 
 
-def not_authenticated():
-    """If you are not authenticated (i.e. when trying to upload a photo) this displays"""
-    return HttpResponse('You must be logged in to upload an image')
+def get_user_score_and_images(user):
+    """This gets a users score, total number of photos and a list of the images"""
+    score = 0
+    total_photos = 0
+    user_images = Image.objects.filter(user=user)
+    for image in user_images:
+        score += image.score
+        total_photos += 1
+    return score, total_photos, user_images
 
 
 def invalid_metadata_popup(request, meta_status):
@@ -55,6 +60,67 @@ def invalid_image_size_popup(request, size_status):
     """If the size status is below 5mb , a popup will display the error."""
     if size_status == "invalid":
         messages.info(request, 'Photo must be less than 5mb')
+
+
+def check_badge(request):
+    """This is used to check if a new badge should be added for the current user"""
+    current_user = request.user
+    score, total_images, _ = get_user_score_and_images(current_user)
+    if score >= 10 and Badge.objects.filter(user=current_user,
+                                            name="Ten Total Score").first() is None:
+        badge = Badge(
+            user=current_user,
+            name="Ten Total Score",
+            description="A post got voted on, earning you ten points!",
+            badge_image="badges/10scorebadge.png",
+        )
+        badge.save()
+    if score >= 100 and Badge.objects.filter(user=current_user,
+                                             name="Hundred Total Score").first() is None:
+        badge = Badge(
+            user=current_user,
+            name="Hundred Total Score",
+            description="Ten of your posts got voted on",
+            badge_image="badges/100scorebadge.png",
+        )
+        badge.save()
+    if score >= 1000 and Badge.objects.filter(user=current_user,
+                                              name="Thousand Total Score").first() is None:
+        badge = Badge(
+            user=current_user,
+            name="Thousand Total Score",
+            description="A hundred of your posts got voted on, well done!",
+            badge_image="badges/1000scorebadge.png",
+        )
+        badge.save()
+    if total_images >= 1 and Badge.objects.filter(user=current_user,
+                                                  name="One Total Image").first() is None:
+        badge = Badge(
+            user=current_user,
+            name="One Total Image",
+            description="Uploaded a photo to the feed",
+            badge_image="badges/1totalbadge.png",
+        )
+        badge.save()
+    if total_images >= 10 and Badge.objects.filter(user=current_user,
+                                                   name="Ten Total Images").first() is None:
+        badge = Badge(
+            user=current_user,
+            name="Ten Total Images",
+            description="Uploaded ten photos.",
+            badge_image="badges/10totalbadge.png",
+        )
+        badge.save()
+    if total_images >= 100 and Badge.objects.filter(user=current_user,
+                                                    name="Hundred Total Images").first() is None:
+        badge = Badge(
+            user=current_user,
+            name="Hundred Total Images",
+            description="Uploaded hundred photos!",
+            badge_image="badges/100totalbadge.png",
+        )
+        badge.save()
+
 
 
 def upload_image(request):
@@ -171,7 +237,6 @@ def display_feed(request):
     # reverse order so the latest submissions appear first-
     # should be expanded later to make popular submissions stay near top
     all_images = Image.objects.all().order_by('-pk')
-    # all_images = Image.objects.all()
     return render(request, 'feed.html', {'images': all_images})
 
 
@@ -194,63 +259,59 @@ def leaderboards(request):
 
     return render(request, 'leaderboards.html', {'scores': sorted_d})
 
+
 def profile(request):
     """where a user can manage their account, including account and post deletion
     and changing profile pictures"""
     if not request.user.is_authenticated:
         return redirect('login')
 
-    user_images = Image.objects.filter(user=request.user)
-    score = 0
-    total_photos = 0
-    for image in user_images:
-        score+=image.score
-        total_photos+=1
+    check_badge(request)
+    badges = Badge.objects.filter(user=request.user)
+    score, total_photos, user_images = get_user_score_and_images(request.user)
     if request.method == 'POST':
         p_form = ProfileUpdateForm(request.POST,
                                    request.FILES,
                                    instance=request.user.profile)
         if p_form.is_valid():
             p_form.save()
-            return redirect('profile') # Redirect back to profile page
+            return redirect('profile')  # Redirect back to profile page
 
     else:
         p_form = ProfileUpdateForm(instance=request.user.profile)
 
     context = {
         'p_form': p_form,
-        'images':user_images,
-        'score':score,
-        'total_photos':total_photos
+        'images': user_images,
+        'score': score,
+        'total_photos': total_photos,
+        'badges': badges
     }
 
     return render(request, 'profile.html', context)
+
 
 def view_profile(request, username=None):
     """view a user's profile"""
     if not request.user.is_authenticated:
         return redirect('login')
 
-    user = User.objects.get(username=username)
-    user_images = Image.objects.filter(user=user)
-    score = 0
-    total_photos = 0
-    for image in user_images:
-        score+=image.score
-        total_photos+=1
+    user = request.user
+    score, total_photos, user_images = get_user_score_and_images(user)
 
     context = {
-        'images':user_images,
-        'score':score,
-        'total_photos':total_photos,
-        'view_user':user
+        'images': user_images,
+        'score': score,
+        'total_photos': total_photos,
+        'view_user': user
     }
 
     return render(request, 'viewprofile.html', context)
 
-def delete_photo(request,photo_id=None):
+
+def delete_photo(request, photo_id=None):
     """delete a user's photo by replacing it with a placeholder"""
-    photo_to_delete=Image.objects.get(id=photo_id)
+    photo_to_delete = Image.objects.get(id=photo_id)
     photo_to_delete.img = str(Path('./picture/error.jpg'))
     photo_to_delete.title = "This photo was removed"
     photo_to_delete.description = "User deleted the photo"
@@ -258,15 +319,17 @@ def delete_photo(request,photo_id=None):
 
     return redirect('profile')
 
-def delete_account(request,username=None):
+
+def delete_account(request, username=None):
     """delete a user's account"""
-    user_to_delete=User.objects.get(username=username)
+    user_to_delete = User.objects.get(username=username)
     user_images = Image.objects.filter(user=user_to_delete)
     for img in user_images:
         img.delete()
     user_to_delete.delete()
 
     return HttpResponseRedirect('/polls/')
+
 
 def vote(request, photo_id):
     """user votes for a photo"""
@@ -280,12 +343,13 @@ def vote(request, photo_id):
         new_vote.already_voted = True
 
         photo.score += 10
-        #adds user to photoS
+        # adds user to photoS
         photo.user_votes.add(user)
         photo.save()
         new_vote.save()
         return redirect('feed')
     return redirect('feed')
+
 
 def unvote(request, photo_id):
     """user revokes their vote for a photo"""
@@ -300,7 +364,7 @@ def unvote(request, photo_id):
         revoke_vote.delete()
 
         photo.score -= 10
-        #remove user from photo
+        # remove user from photo
         photo.user_votes.remove(user)
         photo.save()
 

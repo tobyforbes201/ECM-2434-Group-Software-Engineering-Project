@@ -12,9 +12,11 @@ image_storage = FileSystemStorage(
     base_url=u'{0}feed/'.format(settings.MEDIA_URL),
 )
 
+
 def image_directory_path(instance, filename):
     """File will be uploaded to MEDIA_ROOT/feed/picture/<filename>."""
     return u'picture/{0}'.format(filename)
+
 
 class Challenge(models.Model):
     """A model used to store challenges"""
@@ -27,11 +29,20 @@ class Challenge(models.Model):
     endDate = models.DateTimeField()
 
 
+class Badge(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE, related_name="owner")
+    name = models.CharField(max_length=200)
+    description = models.CharField(max_length=200)
+    badge_image = models.ImageField(upload_to=image_directory_path, storage=image_storage)
+
+
 class Image(models.Model):
     """A model used to store images and other related information."""
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,related_name="author")
+        on_delete=models.CASCADE, related_name="author")
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=200)
     img = models.ImageField(upload_to=image_directory_path, storage=image_storage)
@@ -40,31 +51,34 @@ class Image(models.Model):
     score = models.IntegerField()
     user_votes = models.ManyToManyField(User)
 
-    class Meta():
+    class Meta:
         """The meta information for the Image class."""
         db_table = "polls_image"
+
 
 class Profile(models.Model):
     """A model to store user profiles"""
     # delete profile if user is deleted
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    img = models.ImageField(default='default.jpg',upload_to=image_directory_path, storage=image_storage)
+    img = models.ImageField(default='default.jpg', upload_to=image_directory_path,
+                            storage=image_storage)
 
     def __str__(self):
-        # how the model is displayed
+        """Used to display the profile model"""
         return f'{self.user.username} Profile'
 
     def save(self, *args, **kwargs):
         """Overwrite the profile image and resize it"""
         super(Profile, self).save(*args, **kwargs)
 
-        img = PilImage.open(self.img.path) # Open image
-        
+        img = PilImage.open(self.img.path)  # Open image
+
         # resize image
         if img.height > 300 or img.width > 300:
             output_size = (300, 300)
-            img.thumbnail(output_size) # Resize image
-            img.save(self.img.path) # Save it again and override the larger image
+            img.thumbnail(output_size)  # Resize image
+            img.save(self.img.path)  # Save it again and override the larger image
+
 
 class Vote(models.Model):
     """A user's vote for a photo"""
