@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.utils import timezone
 
 from .models import Image, Vote, Badge, Challenge
 from .forms import LoginForm, SignupForm, ImagefieldForm, ProfileUpdateForm
@@ -122,6 +123,59 @@ def check_badge(request):
         badge.save()
 
 
+def check_challenge_active():
+    """This method is used to check if a challenge is active and handle expiring of challenges."""
+    for challenge in Challenge.objects.all():
+        print(challenge.active, challenge.startDate < timezone.now() and challenge.endDate < timezone.now())
+        # Checks if a challenge is active.
+        if challenge.startDate < timezone.now() < challenge.endDate:
+            challenge.active = True
+            challenge.save()
+        # Checks if a challenge has expired and gives out badges
+        elif challenge.active is True and challenge.startDate < timezone.now() and challenge.endDate < timezone.now():
+            challenge.active = False
+            challenge.save()
+            position = 1
+            for image in Image.objects.filter(challenge=challenge).order_by('score'):
+                print(image.user)
+                user = image.user
+                if position == 1 and Badge.objects.filter(user=user, name="First Badge").first() is None:
+                    badge = Badge(
+                        user=user,
+                        name="First Badge",
+                        description="You came first in a challenge!",
+                        badge_image="badges/firstbadge.png",
+                    )
+                    badge.save()
+                elif position == 2 and Badge.objects.filter(user=user, name="Second Badge").first() is None:
+                    badge = Badge(
+                        user=user,
+                        name="Second Badge",
+                        description="You came second in a challenge, go for gold next time!",
+                        badge_image="badges/secondbadge.png",
+                    )
+                    badge.save()
+                elif position == 3 and Badge.objects.filter(user=user, name="Third Badge").first() is None:
+                    badge = Badge(
+                        user=user,
+                        name="Third Badge",
+                        description="You came third in challenge",
+                        badge_image="badges/thirdbadge.png",
+                    )
+                    badge.save()
+                elif Badge.objects.filter(user=user, name="Participation Badge").first() is None:
+                    badge = Badge(
+                        user=user,
+                        name="Participation Badge",
+                        description="You participated in a challenge",
+                        badge_image="badges/participationbadge.png",
+                    )
+                    badge.save()
+                position += 1
+        else:
+            challenge.active = False
+            challenge.save()
+
 
 def upload_image(request):
     """This is used once the request has been made, process it.
@@ -130,8 +184,8 @@ def upload_image(request):
 
     if not request.user.is_authenticated:
         return redirect('login')
-    for challenge in Challenge.objects.all():
-        Challenge.is_active(challenge)
+
+    check_challenge_active()
 
     if request.method == "POST":
 
@@ -274,17 +328,9 @@ def profile(request):
     if not request.user.is_authenticated:
         return redirect('login')
 
-
     check_badge(request)
     badges = Badge.objects.filter(user=request.user)
     score, total_photos, user_images = get_user_score_and_images(request.user)
-
-    user_images = Image.objects.filter(user=request.user)
-    score = 0
-    total_photos = 0
-    for image in user_images:
-        score += image.score
-        total_photos += 1
 
     if request.method == 'POST':
         p_form = ProfileUpdateForm(request.POST,
@@ -313,6 +359,7 @@ def view_profile(request, username=None):
     if not request.user.is_authenticated:
         return redirect('login')
 
+    badges = Badge.objects.filter(user=request.user)
     user = request.user
     score, total_photos, user_images = get_user_score_and_images(user)
 
@@ -320,7 +367,8 @@ def view_profile(request, username=None):
         'images': user_images,
         'score': score,
         'total_photos': total_photos,
-        'view_user': user
+        'view_user': user,
+        'badges': badges,
     }
 
     return render(request, 'viewprofile.html', context)
