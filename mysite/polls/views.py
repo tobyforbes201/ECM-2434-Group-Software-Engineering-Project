@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
 
-from .models import Image, Vote, Badge
+from .models import Image, Vote, Badge, Challenge
 from .forms import LoginForm, SignupForm, ImagefieldForm, ProfileUpdateForm
 from .image_metadata import get_gps, get_time, get_distance
 from .validate import validate_metadata, validate_image_size
@@ -130,15 +130,22 @@ def upload_image(request):
 
     if not request.user.is_authenticated:
         return redirect('login')
+    for challenge in Challenge.objects.all():
+        Challenge.is_active(challenge)
+
     if request.method == "POST":
+
         form = ImagefieldForm(request.POST, request.FILES)
         # Sanitize inputs
+
         if form.is_valid():
+            challenge = form.cleaned_data["challenge"]
             name = form.cleaned_data["name"]
             desc = form.cleaned_data["description"]
             img = form.cleaned_data["image"]
             # Create the table object
             obj = Image(
+                challenge=challenge,
                 title=name,
                 description=desc,
                 img=img,
@@ -184,6 +191,7 @@ def upload_image(request):
     else:
         # display the image upload form
         form = ImagefieldForm()
+
     context['form'] = form
     return render(request, "uploadfile.html", context)
 
@@ -266,9 +274,18 @@ def profile(request):
     if not request.user.is_authenticated:
         return redirect('login')
 
+
     check_badge(request)
     badges = Badge.objects.filter(user=request.user)
     score, total_photos, user_images = get_user_score_and_images(request.user)
+
+    user_images = Image.objects.filter(user=request.user)
+    score = 0
+    total_photos = 0
+    for image in user_images:
+        score += image.score
+        total_photos += 1
+
     if request.method == 'POST':
         p_form = ProfileUpdateForm(request.POST,
                                    request.FILES,
@@ -286,6 +303,7 @@ def profile(request):
         'score': score,
         'total_photos': total_photos,
         'badges': badges
+        'total_photos': total_photos
     }
 
     return render(request, 'profile.html', context)

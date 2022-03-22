@@ -2,10 +2,14 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
-from .models import Image, Profile, Badge
 
-# register user profiles
+from .models import Image, Profile, Badge, Challenge
+
+# register user profiles and challenges
 admin.site.register(Profile)
+admin.site.register(Challenge)
+
+
 
 
 @admin.register(Image)
@@ -13,7 +17,7 @@ class ImageAdmin(admin.ModelAdmin):
     """This is used for looking at all the
      images saved on the database."""
     fields = ['user', 'title', 'description', 'img', 'image_tag',
-              'gps_coordinates', 'taken_date', 'score']
+              'gps_coordinates', 'taken_date', 'score', 'challenge']
     readonly_fields = ['user', 'title', 'description', 'img',
                        'image_tag', 'gps_coordinates', 'taken_date']
     actions = ['delete_model']
@@ -35,7 +39,6 @@ class ImageAdmin(admin.ModelAdmin):
         obj.save()
 
     image_tag.short_description = 'Image'
-
 
 @admin.register(Badge)
 class BadgeAdmin(admin.ModelAdmin):
