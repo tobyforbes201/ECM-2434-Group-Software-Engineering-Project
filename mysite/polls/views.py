@@ -359,8 +359,8 @@ def view_profile(request, username=None):
     if not request.user.is_authenticated:
         return redirect('login')
 
-    badges = Badge.objects.filter(user=request.user)
-    user = request.user
+    user = User.objects.get(username=username)
+    badges = Badge.objects.filter(user=user)
 
     check_challenge_active()
     check_badge(user)
