@@ -4,3 +4,6 @@ Pillow
 geopy
 gunicorn
 psycopg2
+tensorflow
+keras
+opency-python

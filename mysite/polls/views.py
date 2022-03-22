@@ -1,6 +1,7 @@
 """This is to handle views, a function that takes a web request and returns a web response"""
 import datetime
 import operator
+import random
 from pathlib import Path
 
 from django.contrib.auth import login as auth_login, logout as auth_logout
@@ -191,9 +192,8 @@ def logout(request):
 
 def display_feed(request):
     """A view to display the photo feed to users"""
-    # reverse order so the latest submissions appear first-
-    # should be expanded later to make popular submissions stay near top
-    all_images = Image.objects.all().order_by('-pk')
+    # images are displayed in a random order to keep the feed fresh every time
+    all_images = Image.objects.all().order_by('?')
     # all_images = Image.objects.all()
     return render(request, 'feed.html', {'images': all_images})
 
