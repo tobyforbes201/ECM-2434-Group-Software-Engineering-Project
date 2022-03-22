@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.contrib import messages
 
+from .ml_ai_image_classification import ai_classify_image, ai_face_recognition
 from .models import Image, Vote, Challenge
 from .forms import LoginForm, SignupForm, ImagefieldForm, ProfileUpdateForm
 from .image_metadata import get_gps, get_time, get_distance
@@ -21,9 +22,22 @@ def get_img_metadata(fname):
     return get_gps(fname), get_time(fname)
 
 
-def is_photo_valid_for_challenge(gps, date_taken):
+def is_photo_valid_for_challenge(request,gps, date_taken, challenge_subject, img_path):
     """Checks to see if the photo was taken within 2km of campus
     raise ValidationError(gps)."""
+    if challenge_subject == "group":
+        #a group is more than one person
+        if ai_face_recognition(img_path) < 1:
+            messages.info(request, 'AI did not find multiple faces')
+            return False
+    elif challenge_subject == '' or challenge_subject == None:
+        # if there is no subject it cannot be analysed by the ai
+        pass
+    else:
+        if ai_classify_image(img_path, challenge_subject) == False:
+            messages.info(request, 'AI could not find a '+str(challenge_subject))
+            return False
+
     if get_distance((50.7366, -3.5350), gps) <= 2:
         # After this, the date should also be validated.
         return True
@@ -112,7 +126,8 @@ def upload_image(request):
                 # message tells user what metadata is missing
                 return render(request, "uploadfile.html", context)  # refresh page
 
-            if is_photo_valid_for_challenge(gps, date_taken):
+            if is_photo_valid_for_challenge(request,gps, date_taken,challenge.subject,
+                Path('.' + obj.img.url)):
                 obj.save()
                 return redirect('successful_upload')
             messages.info(request, 'Photo is either too far from challenge'

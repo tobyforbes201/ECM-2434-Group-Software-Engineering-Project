@@ -57,8 +57,14 @@ exif library:
 	pip install exif  
 geopy library:  
 	pip install geopy  
+tensorflow library:  
+	pip install tensorflow  
+keras library:  
+	pip install keras  
+opencv library:  
+	pip install opencv-python
 	  
-If you wish to host a dedicated server to run the web-app off of, you will also need a hosting service e.g. Google Cloud SDK  
+If you wish to host a dedicated server to run the web-app off of, you will also need a hosting service e.g. Google Cloud SDK, Digital Ocean  
 
 Running the Project:
 --------------------
