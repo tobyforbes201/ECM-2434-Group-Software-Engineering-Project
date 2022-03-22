@@ -6,4 +6,4 @@ gunicorn
 psycopg2
 tensorflow
 keras
-opency-python
+opencv-python
