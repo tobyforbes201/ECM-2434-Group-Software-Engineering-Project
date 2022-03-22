@@ -37,8 +37,8 @@
   <div style="margin:auto;width:100%;border:5px;padding:5px;">
     <h3>{{img.challenge}}</h3><br>
     <img src="{{img.img.url}}" width="100%"; object-fit="cover"; object-position="bottom";/><br>
-    <h4><a href="{% url 'viewprofile' img.user.get_username %}"><img class= "profile_feed" src="{{ img.user.profile.img.url }}" width="20%" style="padding-top: 5%;"></a>Photo by: {{img.user}}</h4><br>
-    <h5>Taken on {{img.taken_date}}<br><br>{{img.description}}<br><br>Score: {{img.score}}</h5>
+    <h4><a href="{% url 'viewprofile' img.user.get_username %}"><img class= "profile_feed" src="{{ img.user.profile.img.url }}"></a>Photo by: {{img.user}}</h4><br>
+    <h5>Taken on: {{img.taken_date}}<br><br>Challenge: {{img.challenge}}<br><br>Description: {{img.description}}<br><br>Score: {{img.score}}</h5>
   </div>
 
     {% if user in img.user_votes.all %}

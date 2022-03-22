@@ -2,14 +2,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
-
 from .models import Image, Profile, Badge, Challenge
-
-# register user profiles and challenges
-admin.site.register(Profile)
-admin.site.register(Challenge)
-
-
 
 
 @admin.register(Image)
@@ -19,7 +12,7 @@ class ImageAdmin(admin.ModelAdmin):
     fields = ['user', 'title', 'description', 'img', 'image_tag',
               'gps_coordinates', 'taken_date', 'score', 'challenge']
     readonly_fields = ['user', 'title', 'description', 'img',
-                       'image_tag', 'gps_coordinates', 'taken_date']
+                       'image_tag', 'gps_coordinates', 'taken_date', 'challenge']
     actions = ['delete_model']
 
     def image_tag(self, img):
@@ -40,10 +33,30 @@ class ImageAdmin(admin.ModelAdmin):
 
     image_tag.short_description = 'Image'
 
+
 @admin.register(Badge)
 class BadgeAdmin(admin.ModelAdmin):
-    """This is used to all displaying of badges in admin."""
+    """This is used to display badges in admin."""
     fields = ['user', 'name', 'description', 'badge_image']
+
+    def has_add_permission(self, request, obj=None):
+        """This is used to update add permissions to false."""
+        return False
+
+
+@admin.register(Challenge)
+class ChallengeAdmin(admin.ModelAdmin):
+    """This is used to display challenges in admin."""
+    fields = ['name', 'description', 'location', 'locationRadius',
+              'subject', 'startDate', 'endDate', 'active']
+    readonly_fields = ['active']
+
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    """This is used to display the user's profiles in admin."""
+    fields = ['user', 'img']
+    readonly_fields = ['user']
 
     def has_add_permission(self, request, obj=None):
         """This is used to update add permissions to false."""
