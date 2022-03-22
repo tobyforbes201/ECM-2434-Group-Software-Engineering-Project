@@ -19,9 +19,24 @@
             margin-right: auto;
             margin-left: auto;
         }
+
+        .logo{
+            position: absolute;
+            border-radius: 50%;
+            width: 100%;
+            height: 100%;
+            max-width: 150px;
+            max-height: 150px;
+            border: 5px;
+          padding: 5px;
+        }
     </style>
 </head>
 <body>
+<div class="logo">
+    <img src="./media/logo.png" class="logo">
+</div>
+
 {% if user.is_authenticated %}
     	<meta http-equiv="refresh" content="0; URL=/polls/feed" />
 {% endif %}
