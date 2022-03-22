@@ -7,13 +7,14 @@
   <link href="./media/static/style.css" rel="stylesheet">
   <title>Photo Feed</title>
   </head>
-<body style="background-color:#F2F9FD;">
+
+<body style="background-color:#bfcabf;">
 
 {% if not user.is_authenticated %}
 <meta http-equiv="refresh" content="0; URL=/polls" />
 {% endif %}
 
-<nav class="navbar navbar-dark" style="background-color: #e3f2fd;width:100vw">
+<nav class="navbar navbar-dark" style="background-color: #5e7a5f;width:100vw">
 	<div class="container-fluid">
 	  <div class="column">
     	<a href="uploadimage" class="navbar-nav mr-auto"><img alt="Upload Image" src="./media/static/upload.png" class="img-responsive" style="max-height:5%"></a>
@@ -32,15 +33,32 @@
 <div class = "central">
   <div class = "central1">
     <h1>Welcome {{ user.get_username }}!</h1>
-    <p>Current Challenge:<br>Take the best photo on the University of Exeter campus</p>
   </div>
 {% for img in images %}
-  <div>
-    <h3>{{img.title}}</h3><br>
-    <img src="{{img.img.url}}" class="img-responsive" style="max-height:80vh;max-width:80vw"; object-fit="cover"; object-position="bottom";/><br>
-    <h4>Photo by: {{img.user}}, taken on {{img.taken_date}}</h4><br>
-    <h5>{{img.description}}<br>Score: {{img.score}}</h5>
+  <div style="margin:auto;width:50%;border:5px;padding:5px;">
+    <h3>{{img.challenge}}</h3><br>
+    <img src="{{img.img.url}}" width="100%"; object-fit="cover"; object-position="bottom";/><br>
+    <h4><a href="{% url 'viewprofile' img.user.get_username %}"><img class= "profile_feed" src="{{ img.user.profile.img.url }}"></a>Photo by: {{img.user}}</h4><br>
+    <h5>Taken on: {{img.taken_date}}<br><br>Description: {{img.description}}<br><br>Score: {{img.score}}</h5>
   </div>
+
+    {% if user in img.user_votes.all %}
+    <form action="{% url 'unvote' img.id  %}" method="post" name="vote" id="voteform">
+        {% csrf_token %}
+        <button type='submit' name='vote' value="{{ img.id }}" class="btn btn-primary">Remove vote</button>
+    </form>
+    {% else %}    
+
+    {% if user == img.user %}
+
+    {% else %}
+    <form action="{% url 'vote' img.id  %}" method="post" name="vote" id="voteform">
+        {% csrf_token %}
+        <button type='submit' name='vote' value="{{ img.id }}" class="btn btn-primary">Vote</button>
+    </form>
+    {% endif %}
+
+{% endif %}
 {% endfor %}
 </div>
 </body>

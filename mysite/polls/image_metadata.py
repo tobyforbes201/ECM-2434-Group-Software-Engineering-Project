@@ -12,7 +12,7 @@ def get_gps(fname):
     if my_image.has_exif:
         return (get_lat(my_image.gps_latitude_ref, my_image.gps_latitude)
                 , get_long(my_image.gps_longitude_ref, my_image.gps_longitude))
-    raise Exception
+    raise Exception('exif not found')
 
 
 def get_lat(ref, lat):
@@ -43,7 +43,7 @@ def get_time(fname):
 
     if my_image.has_exif:
         return my_image.datetime_original
-    raise Exception
+    raise Exception('time not found')
 
 
 def get_time_dif(starting_time, fname):

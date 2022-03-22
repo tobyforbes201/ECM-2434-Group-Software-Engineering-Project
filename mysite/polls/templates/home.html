@@ -19,9 +19,21 @@
             margin-right: auto;
             margin-left: auto;
         }
+
+        .logo{
+            position: absolute;
+            border-radius: 50%;
+            width: 100%;
+            height: 100%;
+            max-width: 150px;
+            max-height: 150px;
+            border: 5px;
+          padding: 5px;
+        }
     </style>
 </head>
 <body>
+
 {% if user.is_authenticated %}
     	<meta http-equiv="refresh" content="0; URL=/polls/feed" />
 {% endif %}
@@ -34,14 +46,16 @@
     background-size: cover;
   "
 >
-<div class= "central">
-    <h1>BeautySpot</h1><br>
-        <p>Welcome to BeautySpot, the photo-taking challenge. Please log in or signup.</p>
-    <a class="btn btn-primary btn-lg" href="login" role="button" style="width:30%;margin-left:15%;min-width: fit-content">Login</a>
-    <a class="btn btn-primary btn-lg" href="signup" role="button" style="width:30%;margin-left:15%;min-width: fit-content">Signup</a>
-</div>
-</div>
 <!-- Background image -->
+
+<div class= "central">
+    <div style="padding-top: 5%;"><center><img src="./media/logo.png" style="width:70%"></center></div><br>
+        <p style="font-size:5vw;background:rgba(191, 202, 191, 0.8)">Welcome to BeautySpot, the photo-taking challenge. Please log in or signup.</p>
+    <a class="btn" href="login" role="button" style="width:30%;margin-left:15%;min-width: fit-content;background-color:rgba(191, 202, 191, 0.8);font-size:5vw">Login</a>
+    <a class="btn" href="signup" role="button" style="width:30%;margin-left:15%;min-width: fit-content;background-color:rgba(191, 202, 191, 0.8);font-size:5vw">Signup</a>
+</div>
+</div>
+
 
 </body>
 </html>

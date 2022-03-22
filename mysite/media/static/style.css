@@ -77,3 +77,6 @@
 		  cursor: pointer;
 		  transition: 0.5s
 		}
+		.background{
+			background-color: #bfcabf;
+		}
