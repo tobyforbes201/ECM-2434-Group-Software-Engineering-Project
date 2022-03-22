@@ -2,11 +2,13 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
-from .models import Image, Profile, Challenge
+
+from .models import Image, Profile, Badge, Challenge
 
 # register user profiles and challenges
 admin.site.register(Profile)
 admin.site.register(Challenge)
+
 
 
 
@@ -37,4 +39,12 @@ class ImageAdmin(admin.ModelAdmin):
         obj.save()
 
     image_tag.short_description = 'Image'
-    
+
+@admin.register(Badge)
+class BadgeAdmin(admin.ModelAdmin):
+    """This is used to all displaying of badges in admin."""
+    fields = ['user', 'name', 'description', 'badge_image']
+
+    def has_add_permission(self, request, obj=None):
+        """This is used to update add permissions to false."""
+        return False
