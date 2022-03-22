@@ -1,6 +1,7 @@
 """This is to handle views, a function that takes a web request and returns a web response"""
 import datetime
 import operator
+import random
 from pathlib import Path
 
 from django.contrib.auth import login as auth_login, logout as auth_logout
@@ -10,7 +11,8 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.utils import timezone
 
-from .models import Image, Vote, Badge, Challenge
+from .ml_ai_image_classification import ai_classify_image, ai_face_recognition
+from .models import Image, Vote,Badge, Challenge
 from .forms import LoginForm, SignupForm, ImagefieldForm, ProfileUpdateForm
 from .image_metadata import get_gps, get_time, get_distance
 from .validate import validate_metadata, validate_image_size
@@ -21,9 +23,22 @@ def get_img_metadata(fname):
     return get_gps(fname), get_time(fname)
 
 
-def is_photo_valid_for_challenge(gps, date_taken):
+def is_photo_valid_for_challenge(request,gps, date_taken, challenge_subject, img_path):
     """Checks to see if the photo was taken within 2km of campus
     raise ValidationError(gps)."""
+    if challenge_subject == "group":
+        #a group is more than one person
+        if ai_face_recognition(img_path) < 1:
+            messages.info(request, 'AI did not find multiple faces')
+            return False
+    elif challenge_subject == '' or challenge_subject == None:
+        # if there is no subject it cannot be analysed by the ai
+        pass
+    else:
+        if ai_classify_image(img_path, challenge_subject) == False:
+            messages.info(request, 'AI could not find a '+str(challenge_subject))
+            return False
+
     if get_distance((50.7366, -3.5350), gps) <= 2:
         # After this, the date should also be validated.
         return True
@@ -231,7 +246,8 @@ def upload_image(request):
                 # message tells user what metadata is missing
                 return render(request, "uploadfile.html", context)  # refresh page
 
-            if is_photo_valid_for_challenge(gps, date_taken):
+            if is_photo_valid_for_challenge(request,gps, date_taken,challenge.subject,
+                Path('.' + obj.img.url)):
                 obj.save()
                 return redirect('successful_upload')
             messages.info(request, 'Photo is either too far from challenge'
@@ -295,11 +311,10 @@ def logout(request):
 
 def display_feed(request):
     """A view to display the photo feed to users"""
-    # reverse order so the latest submissions appear first-
-    # should be expanded later to make popular submissions stay near top
-    all_images = Image.objects.all().order_by('-pk')
-    return render(request, 'feed.html', {'images': all_images})
+    # images are displayed in a random order to keep the feed fresh every time
+    all_images = Image.objects.all().order_by('?')
 
+    return render(request, 'feed.html', {'images': all_images})
 
 def leaderboards(request):
     """A view to display the leaderboards"""
