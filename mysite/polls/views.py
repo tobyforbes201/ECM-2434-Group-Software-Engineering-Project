@@ -302,8 +302,7 @@ def profile(request):
         'images': user_images,
         'score': score,
         'total_photos': total_photos,
-        'badges': badges
-        'total_photos': total_photos
+        'badges': badges,
     }
 
     return render(request, 'profile.html', context)
