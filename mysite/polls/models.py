@@ -29,15 +29,8 @@ class Challenge(models.Model):
     subject = models.CharField(max_length=200)
     startDate = models.DateTimeField()
     endDate = models.DateTimeField()
-    active = models.BooleanField(default=False)
+    active = models.BooleanField(default=False, blank=True)
 
-    def is_active(self):
-        if self.startDate < timezone.now() < self.endDate:
-            self.active = True
-            self.save()
-        else:
-            self.active = False
-            self.save()
 
     def __str__(self):
         # how the model is displayed
@@ -59,7 +52,6 @@ class Image(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE, related_name="author")
-    title = models.CharField(max_length=200)
     description = models.CharField(max_length=200)
     img = models.ImageField(upload_to=image_directory_path, storage=image_storage)
     gps_coordinates = models.CharField(max_length=200)
