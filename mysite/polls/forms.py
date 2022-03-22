@@ -13,7 +13,7 @@ from .models import Profile, Challenge
 class ImagefieldForm(forms.Form):
     """The form used to upload a new image."""
     challenge = forms.ModelChoiceField(queryset=Challenge.objects.filter(active=True), initial=0)
-    description = forms.CharField(widget=forms.Textarea(attrs={'style': "width:100%;"}),
+    description = forms.CharField(widget=forms.Textarea(attrs={'style': "width:95vw;"}),
                                   max_length=200)
     image = forms.ImageField(validators=[check_image_type])
 
