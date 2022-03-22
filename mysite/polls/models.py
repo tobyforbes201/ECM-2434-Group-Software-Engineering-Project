@@ -52,7 +52,6 @@ class Image(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE, related_name="author")
-    title = models.CharField(max_length=200)
     description = models.CharField(max_length=200)
     img = models.ImageField(upload_to=image_directory_path, storage=image_storage)
     gps_coordinates = models.CharField(max_length=200)
