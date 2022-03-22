@@ -6,5 +6,4 @@ gunicorn
 psycopg2
 tensorflow
 keras
-opencv-python
-libgl1
+opencv-python-headless
