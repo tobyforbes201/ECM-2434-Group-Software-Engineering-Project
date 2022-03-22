@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -32,27 +32,17 @@
         }
     </style>
 </head>
-<body>
+<body style="background-color:#bfcabf;>
 
 {% if user.is_authenticated %}
     	<meta http-equiv="refresh" content="0; URL=/polls/feed" />
 {% endif %}
-<!-- Background image -->
-<div
-  class="bg-image"
-  style="
-    background-image: url(https://www.thetimes.co.uk/imageserver/image/%2Fmethode%2Ftimes%2Fprod%2Fweb%2Fbin%2F605db9f2-45f3-11ec-aa43-5cc5157b09b9.jpg?crop=2463%2C3694%2C1291%2C15);
-    height: 100vh;
-    background-size: cover;
-  "
->
-<!-- Background image -->
 
 <div class= "central">
     <div style="padding-top: 5%;"><center><img src="./media/logo.png" style="width:70%"></center></div><br>
-        <p style="font-size:5vw;background:rgba(191, 202, 191, 0.8)">Welcome to BeautySpot, the photo-taking challenge. Please log in or signup.</p>
-    <a class="btn" href="login" role="button" style="width:30%;margin-left:15%;min-width: fit-content;background-color:rgba(191, 202, 191, 0.8);font-size:5vw">Login</a>
-    <a class="btn" href="signup" role="button" style="width:30%;margin-left:15%;min-width: fit-content;background-color:rgba(191, 202, 191, 0.8);font-size:5vw">Signup</a>
+        <p style="font-size:5vw;">Welcome to BeautySpot, the photo-taking challenge. Please log in or signup.</p>
+    <a class="btn" href="login" role="button" style="width:30%;margin-left:15%;min-width: fit-content;background-color:#5e7a5f;font-size:5vw"><strong>Login</strong></a>
+    <a class="btn" href="signup" role="button" style="width:30%;margin-left:15%;min-width: fit-content;background-color:#5e7a5f;font-size:5vw"><strong>Signup</strong></a>
 </div>
 </div>
 
