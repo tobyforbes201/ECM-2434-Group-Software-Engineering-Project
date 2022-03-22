@@ -9,9 +9,9 @@ from .models import Image, Profile, Badge, Challenge
 class ImageAdmin(admin.ModelAdmin):
     """This is used for looking at all the
      images saved on the database."""
-    fields = ['user', 'title', 'description', 'img', 'image_tag',
+    fields = ['user', 'description', 'img', 'image_tag',
               'gps_coordinates', 'taken_date', 'score', 'challenge']
-    readonly_fields = ['user', 'title', 'description', 'img',
+    readonly_fields = ['user', 'description', 'img',
                        'image_tag', 'gps_coordinates', 'taken_date', 'challenge']
     actions = ['delete_model']
 
@@ -26,7 +26,6 @@ class ImageAdmin(admin.ModelAdmin):
 
     def delete_model(self, request, obj):
         """Overwriting the image deletion method to allow for overwriting the image."""
-        obj.title = "DELETED"
         obj.description = "This image has been deleted by an administrator."
         obj.img = "picture/error.jpg"
         obj.save()
@@ -48,8 +47,7 @@ class BadgeAdmin(admin.ModelAdmin):
 class ChallengeAdmin(admin.ModelAdmin):
     """This is used to display challenges in admin."""
     fields = ['name', 'description', 'location', 'locationRadius',
-              'subject', 'startDate', 'endDate', 'active']
-    readonly_fields = ['active']
+              'subject', 'startDate', 'endDate']
 
 
 @admin.register(Profile)

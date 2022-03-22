@@ -125,20 +125,20 @@ def check_badge(user):
 def check_challenge_active():
     """This method is used to check if a challenge is active and handle expiring of challenges."""
     for challenge in Challenge.objects.all():
-        print(challenge.active, challenge.startDate < timezone.now() and challenge.endDate < timezone.now())
         # Checks if a challenge is active.
         if challenge.startDate < timezone.now() < challenge.endDate:
             challenge.active = True
             challenge.save()
         # Checks if a challenge has expired and gives out badges
-        elif challenge.active is True and challenge.startDate < timezone.now() and challenge.endDate < timezone.now():
+        elif challenge.active is True and \
+                challenge.startDate < timezone.now() and challenge.endDate < timezone.now():
             challenge.active = False
             challenge.save()
             position = 1
             for image in Image.objects.filter(challenge=challenge).order_by('score'):
-                print(image.user)
                 user = image.user
-                if position == 1 and Badge.objects.filter(user=user, name="First Badge").first() is None:
+                if position == 1 and\
+                        Badge.objects.filter(user=user, name="First Badge").first() is None:
                     badge = Badge(
                         user=user,
                         name="First Badge",
@@ -146,7 +146,8 @@ def check_challenge_active():
                         badge_image="badges/firstbadge.png",
                     )
                     badge.save()
-                elif position == 2 and Badge.objects.filter(user=user, name="Second Badge").first() is None:
+                elif position == 2 and\
+                        Badge.objects.filter(user=user, name="Second Badge").first() is None:
                     badge = Badge(
                         user=user,
                         name="Second Badge",
@@ -154,7 +155,8 @@ def check_challenge_active():
                         badge_image="badges/secondbadge.png",
                     )
                     badge.save()
-                elif position == 3 and Badge.objects.filter(user=user, name="Third Badge").first() is None:
+                elif position == 3 and\
+                        Badge.objects.filter(user=user, name="Third Badge").first() is None:
                     badge = Badge(
                         user=user,
                         name="Third Badge",
@@ -193,13 +195,11 @@ def upload_image(request):
 
         if form.is_valid():
             challenge = form.cleaned_data["challenge"]
-            name = form.cleaned_data["name"]
             desc = form.cleaned_data["description"]
             img = form.cleaned_data["image"]
             # Create the table object
             obj = Image(
                 challenge=challenge,
-                title=name,
                 description=desc,
                 img=img,
                 gps_coordinates=(0, 0),
