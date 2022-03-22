@@ -63,59 +63,58 @@ def invalid_image_size_popup(request, size_status):
         messages.info(request, 'Photo must be less than 5mb')
 
 
-def check_badge(request):
+def check_badge(user):
     """This is used to check if a new badge should be added for the current user"""
-    current_user = request.user
-    score, total_images, _ = get_user_score_and_images(current_user)
-    if score >= 10 and Badge.objects.filter(user=current_user,
+    score, total_images, _ = get_user_score_and_images(user)
+    if score >= 10 and Badge.objects.filter(user=user,
                                             name="Ten Total Score").first() is None:
         badge = Badge(
-            user=current_user,
+            user=user,
             name="Ten Total Score",
             description="A post got voted on, earning you ten points!",
             badge_image="badges/10scorebadge.png",
         )
         badge.save()
-    if score >= 100 and Badge.objects.filter(user=current_user,
+    if score >= 100 and Badge.objects.filter(user=user,
                                              name="Hundred Total Score").first() is None:
         badge = Badge(
-            user=current_user,
+            user=user,
             name="Hundred Total Score",
             description="Ten of your posts got voted on",
             badge_image="badges/100scorebadge.png",
         )
         badge.save()
-    if score >= 1000 and Badge.objects.filter(user=current_user,
+    if score >= 1000 and Badge.objects.filter(user=user,
                                               name="Thousand Total Score").first() is None:
         badge = Badge(
-            user=current_user,
+            user=user,
             name="Thousand Total Score",
             description="A hundred of your posts got voted on, well done!",
             badge_image="badges/1000scorebadge.png",
         )
         badge.save()
-    if total_images >= 1 and Badge.objects.filter(user=current_user,
+    if total_images >= 1 and Badge.objects.filter(user=user,
                                                   name="One Total Image").first() is None:
         badge = Badge(
-            user=current_user,
+            user=user,
             name="One Total Image",
             description="Uploaded a photo to the feed",
             badge_image="badges/1totalbadge.png",
         )
         badge.save()
-    if total_images >= 10 and Badge.objects.filter(user=current_user,
+    if total_images >= 10 and Badge.objects.filter(user=user,
                                                    name="Ten Total Images").first() is None:
         badge = Badge(
-            user=current_user,
+            user=user,
             name="Ten Total Images",
             description="Uploaded ten photos.",
             badge_image="badges/10totalbadge.png",
         )
         badge.save()
-    if total_images >= 100 and Badge.objects.filter(user=current_user,
+    if total_images >= 100 and Badge.objects.filter(user=user,
                                                     name="Hundred Total Images").first() is None:
         badge = Badge(
-            user=current_user,
+            user=user,
             name="Hundred Total Images",
             description="Uploaded hundred photos!",
             badge_image="badges/100totalbadge.png",
@@ -328,7 +327,8 @@ def profile(request):
     if not request.user.is_authenticated:
         return redirect('login')
 
-    check_badge(request)
+    check_challenge_active()
+    check_badge(request.user)
     badges = Badge.objects.filter(user=request.user)
     score, total_photos, user_images = get_user_score_and_images(request.user)
 
@@ -361,6 +361,9 @@ def view_profile(request, username=None):
 
     badges = Badge.objects.filter(user=request.user)
     user = request.user
+
+    check_challenge_active()
+    check_badge(user)
     score, total_photos, user_images = get_user_score_and_images(user)
 
     context = {
