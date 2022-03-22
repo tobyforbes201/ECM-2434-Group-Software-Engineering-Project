@@ -44,6 +44,15 @@ class Challenge(models.Model):
         return f'{self.name}'
 
 
+class Badge(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE, related_name="owner")
+    name = models.CharField(max_length=200)
+    description = models.CharField(max_length=200)
+    badge_image = models.ImageField(upload_to=image_directory_path, storage=image_storage)
+
+
 class Image(models.Model):
     """A model used to store images and other related information."""
     challenge = models.ForeignKey(Challenge, on_delete=models.CASCADE, related_name="challenges", default=1)
@@ -58,7 +67,7 @@ class Image(models.Model):
     score = models.IntegerField()
     user_votes = models.ManyToManyField(User)
 
-    class Meta():
+    class Meta:
         """The meta information for the Image class."""
         db_table = "polls_image"
 
@@ -67,10 +76,11 @@ class Profile(models.Model):
     """A model to store user profiles"""
     # delete profile if user is deleted
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    img = models.ImageField(default='default.jpg', upload_to=image_directory_path, storage=image_storage)
+    img = models.ImageField(default='default.jpg', upload_to=image_directory_path,
+                            storage=image_storage)
 
     def __str__(self):
-        # how the model is displayed
+        """Used to display the profile model"""
         return f'{self.user.username} Profile'
 
     def save(self, *args, **kwargs):

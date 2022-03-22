@@ -8,11 +8,11 @@ from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from django.http import HttpResponse
 from django.contrib import messages
 
 from .ml_ai_image_classification import ai_classify_image, ai_face_recognition
-from .models import Image, Vote, Challenge
+from .models import Image, Vote,Badge, Challenge
+
 from .forms import LoginForm, SignupForm, ImagefieldForm, ProfileUpdateForm
 from .image_metadata import get_gps, get_time, get_distance
 from .validate import validate_metadata, validate_image_size
@@ -51,9 +51,15 @@ def delete_image_obj(obj):
     obj.delete()
 
 
-def not_authenticated():
-    """If you are not authenticated (i.e. when trying to upload a photo) this displays"""
-    return HttpResponse('You must be logged in to upload an image')
+def get_user_score_and_images(user):
+    """This gets a users score, total number of photos and a list of the images"""
+    score = 0
+    total_photos = 0
+    user_images = Image.objects.filter(user=user)
+    for image in user_images:
+        score += image.score
+        total_photos += 1
+    return score, total_photos, user_images
 
 
 def invalid_metadata_popup(request, meta_status):
@@ -70,6 +76,67 @@ def invalid_image_size_popup(request, size_status):
     """If the size status is below 5mb , a popup will display the error."""
     if size_status == "invalid":
         messages.info(request, 'Photo must be less than 5mb')
+
+
+def check_badge(request):
+    """This is used to check if a new badge should be added for the current user"""
+    current_user = request.user
+    score, total_images, _ = get_user_score_and_images(current_user)
+    if score >= 10 and Badge.objects.filter(user=current_user,
+                                            name="Ten Total Score").first() is None:
+        badge = Badge(
+            user=current_user,
+            name="Ten Total Score",
+            description="A post got voted on, earning you ten points!",
+            badge_image="badges/10scorebadge.png",
+        )
+        badge.save()
+    if score >= 100 and Badge.objects.filter(user=current_user,
+                                             name="Hundred Total Score").first() is None:
+        badge = Badge(
+            user=current_user,
+            name="Hundred Total Score",
+            description="Ten of your posts got voted on",
+            badge_image="badges/100scorebadge.png",
+        )
+        badge.save()
+    if score >= 1000 and Badge.objects.filter(user=current_user,
+                                              name="Thousand Total Score").first() is None:
+        badge = Badge(
+            user=current_user,
+            name="Thousand Total Score",
+            description="A hundred of your posts got voted on, well done!",
+            badge_image="badges/1000scorebadge.png",
+        )
+        badge.save()
+    if total_images >= 1 and Badge.objects.filter(user=current_user,
+                                                  name="One Total Image").first() is None:
+        badge = Badge(
+            user=current_user,
+            name="One Total Image",
+            description="Uploaded a photo to the feed",
+            badge_image="badges/1totalbadge.png",
+        )
+        badge.save()
+    if total_images >= 10 and Badge.objects.filter(user=current_user,
+                                                   name="Ten Total Images").first() is None:
+        badge = Badge(
+            user=current_user,
+            name="Ten Total Images",
+            description="Uploaded ten photos.",
+            badge_image="badges/10totalbadge.png",
+        )
+        badge.save()
+    if total_images >= 100 and Badge.objects.filter(user=current_user,
+                                                    name="Hundred Total Images").first() is None:
+        badge = Badge(
+            user=current_user,
+            name="Hundred Total Images",
+            description="Uploaded hundred photos!",
+            badge_image="badges/100totalbadge.png",
+        )
+        badge.save()
+
 
 
 def upload_image(request):
@@ -224,12 +291,18 @@ def profile(request):
     if not request.user.is_authenticated:
         return redirect('login')
 
+
+    check_badge(request)
+    badges = Badge.objects.filter(user=request.user)
+    score, total_photos, user_images = get_user_score_and_images(request.user)
+
     user_images = Image.objects.filter(user=request.user)
     score = 0
     total_photos = 0
     for image in user_images:
         score += image.score
         total_photos += 1
+
     if request.method == 'POST':
         p_form = ProfileUpdateForm(request.POST,
                                    request.FILES,
@@ -245,7 +318,8 @@ def profile(request):
         'p_form': p_form,
         'images': user_images,
         'score': score,
-        'total_photos': total_photos
+        'total_photos': total_photos,
+        'badges': badges,
     }
 
     return render(request, 'profile.html', context)
@@ -256,13 +330,8 @@ def view_profile(request, username=None):
     if not request.user.is_authenticated:
         return redirect('login')
 
-    user = User.objects.get(username=username)
-    user_images = Image.objects.filter(user=user)
-    score = 0
-    total_photos = 0
-    for image in user_images:
-        score += image.score
-        total_photos += 1
+    user = request.user
+    score, total_photos, user_images = get_user_score_and_images(user)
 
     context = {
         'images': user_images,
