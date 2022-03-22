@@ -182,8 +182,8 @@
 <meta http-equiv="refresh" content="0; URL=/polls" />
 {% endif %}
 
-<body>
-  <nav class="navbar navbar-dark" style="background-color: #e3f2fd;width:100vw">
+<body style="background-color:#bfcabf;">
+  <nav class="navbar navbar-dark" style="background-color: #5e7a5f;width:100vw">
 	<div class="container-fluid">
 	  <div class="column">
     	<a href="../uploadimage" class="navbar-nav mr-auto"><img alt="Upload Image" src="../media/static/upload.png" class="img-responsive" style="max-height:5%"></a>
@@ -200,16 +200,6 @@
 	</div>
 </nav>
 
-{% if user.is_authenticated %}
-<div class="dropdown">
-  <button onclick="dropDown()" class="dropbtn">My Account</button>
-  <div id="myDropdown" class="dropdown-content">
-    <a href="{% url 'viewprofile' user.get_username %}">My Profile</a>
-    <a href="\polls/profile">Manage Account and Photos</a>
-    <a href="\polls/logout">Logout</a>
-  </div>
-</div>
-{% endif %}
 <div div class = "central">
   <div div class = "central1">
     <h1>Profile</h1>
