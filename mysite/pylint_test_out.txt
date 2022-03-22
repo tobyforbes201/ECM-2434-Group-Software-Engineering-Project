@@ -1,0 +1,16 @@
+New Test | Date: 2022-03-18 20:18:33.696669
+************* Module ../polls
+../polls:1:0: F0001: No module named ../polls (fatal)
+Found 2 test(s).
+New Test | Date: 2022-03-18 20:19:33.955305
+************* Module ../polls
+../polls:1:0: F0001: No module named ../polls (fatal)
+Found 2 test(s).
+New Test | Date: 2022-03-18 20:20:20.546498
+************* Module ../polls
+../polls:1:0: F0001: No module named ../polls (fatal)
+Found 2 test(s).
+New Test | Date: 2022-03-18 20:23:18.980867
+************* Module ../polls
+../polls:1:0: F0001: No module named ../polls (fatal)
+Found 2 test(s).
