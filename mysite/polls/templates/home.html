@@ -33,20 +33,18 @@
         }
     </style>
 </head>
-<body style="background-color:#bfcabf;>
+<body style="background-color:#bfcabf;">
 
-{% if user.is_authenticated %}
-    	<meta http-equiv="refresh" content="0; URL=/polls/feed" />
-{% endif %}
-
-<div class= "central">
-    <div style="padding-top: 5%"><center><img src="./media/logo.png" style="width:70%;"></center></div><br>
-        <p style="font-size:5vw;">Welcome to BeautySpot, the photo-taking challenge. Please log in or signup.</p>
-    <a class="btn" href="login" role="button" style="width:30%;margin-left:15%;min-width: fit-content;background-color:#5e7a5f;font-size:5vw"><strong>Login</strong></a>
-    <a class="btn" href="signup" role="button" style="width:30%;margin-left:15%;min-width: fit-content;background-color:#5e7a5f;font-size:5vw"><strong>Signup</strong></a>
-</div>
-</div>
-
+	{% if user.is_authenticated %}
+	    	<meta http-equiv="refresh" content="0; URL=/polls/feed" />
+	{% endif %}
+	
+	<div class= "central">
+	    <div style="padding-top: 5%"><center><img src="./media/logo.png" style="width:70%;"></center></div><br>
+	        <p style="font-size:5vw;">Welcome to BeautySpot, the photo-taking challenge. Please log in or signup.</p>
+	    <a class="btn" href="login" role="button" style="width:30%;margin-left:15%;min-width: fit-content;background-color:#5e7a5f;font-size:5vw"><strong>Login</strong></a>
+	    <a class="btn" href="signup" role="button" style="width:30%;margin-left:15%;min-width: fit-content;background-color:#5e7a5f;font-size:5vw"><strong>Signup</strong></a>
+	</div>
 
 </body>
 </html>

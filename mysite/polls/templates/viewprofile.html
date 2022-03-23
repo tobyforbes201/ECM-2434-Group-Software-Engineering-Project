@@ -201,17 +201,18 @@
 	</div>
 </nav>
 
-<div div class = "central">
-  <div div class = "central1">
-    <h1>Profile</h1>
-    <h2>{{ view_user.username }}<br><img class="profile" src="{{ view_user.profile.img.url }}"></h2>
+<div class = "central">
+  <div class = "central1">
+    <h1 style="font-size:8vw;">Profile</h1>
+    <h2 style="font-size:8vw;">{{ view_user.username }}<br></h2>
+    <center><img class="profile" src="{{ view_user.profile.img.url }}"></center>
   </div>
         <fieldset>
-            <legend>Total points</legend>
-            <h5>{{ score }}</h5>
-            <legend>Number of photos</legend>
-            <h5>{{ total_photos }}</h5>
-            <legend>Badges</legend>
+            <legend style="font-size:5vw;">Total points</legend>
+            <h5 style="font-size:5vw;">{{ score }}</h5>
+            <legend style="font-size:5vw;">Number of photos</legend>
+            <h5 style="font-size:5vw;">{{ total_photos }}</h5>
+            <legend style="font-size:5vw;">Badges</legend>
             <div class="badgerow">
             {% for badge in badges %}
                 <div class="badge">
