@@ -205,7 +205,7 @@ def upload_image(request):
     context = {}
 
     if not request.user.is_authenticated:
-        return redirect('login')
+        return redirect('home')
 
     check_challenge_active()
 
@@ -318,6 +318,8 @@ def logout(request):
 
 def display_feed(request):
     """A view to display the photo feed to users"""
+    if not request.user.is_authenticated:
+        return redirect('home')
     # images are displayed in a random order to keep the feed fresh every time
     all_images = Image.objects.all().order_by('?')
 
@@ -327,7 +329,7 @@ def display_feed(request):
 def leaderboards(request):
     """A view to display the leaderboards"""
     if not request.user.is_authenticated:
-        return redirect('login')
+        return redirect('home')
     all_images = Image.objects.all()
     score_d = {}
     for image in all_images:
@@ -350,7 +352,7 @@ def profile(request):
     """where a user can manage their account, including account and post deletion
     and changing profile pictures"""
     if not request.user.is_authenticated:
-        return redirect('login')
+        return redirect('home')
 
     check_challenge_active()
     check_badge(request.user)
@@ -382,7 +384,7 @@ def profile(request):
 def view_profile(request, username=None):
     """view a user's profile"""
     if not request.user.is_authenticated:
-        return redirect('login')
+        return redirect('home')
 
     user = User.objects.get(username=username)
     badges = Badge.objects.filter(user=user)
