@@ -82,7 +82,7 @@ def invalid_metadata_popup(request, meta_status):
 def invalid_image_size_popup(request, size_status):
     """If the size status is below 5mb , a popup will display the error."""
     if size_status == "invalid":
-        messages.info(request, 'Photo must be less than 5mb')
+        messages.info(request, 'Photo must be less than 20mb')
 
 
 def check_badge(user):
