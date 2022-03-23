@@ -25,7 +25,7 @@ class Challenge(models.Model):
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=200)
     location = models.CharField(max_length=200)
-    locationRadius = models.IntegerField()
+    locationRadius = models.FloatField()
     subject = models.CharField(max_length=200)
     startDate = models.DateTimeField()
     endDate = models.DateTimeField()
