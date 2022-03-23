@@ -44,9 +44,9 @@ def check_image_type(image):
 
 
 def validate_image_size(fname):
-    """ensure that the image size is smaller than 5mb"""
+    """ensure that the image size is smaller than 20mb"""
     size = os.path.getsize(fname)
-    if size > 5242880:
+    if size > 5242880*4:
         return "invalid"
     return "valid"
 
