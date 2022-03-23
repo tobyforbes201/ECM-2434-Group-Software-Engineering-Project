@@ -76,16 +76,16 @@ def ai_face_recognition(image_path):
 	# Load the classifier and create a cascade object for face detection
 	face_cascade = cv.CascadeClassifier(cv.data.haarcascades+'haarcascade_frontalface_alt.xml')
 	# additional cascade object for bodies 
-	body_cascade = cv.CascadeClassifier(cv.data.haarcascades+'haarcascade_fullbody.xml')
+	#body_cascade = cv.CascadeClassifier(cv.data.haarcascades+'haarcascade_fullbody.xml')
 	# analyse the image in multiple scales to detect faces
 	detected_faces = face_cascade.detectMultiScale(
 		grayscale_image,
-		scaleFactor=1.1,
+		scaleFactor=1.2,
 		minNeighbors=5,
 		minSize=(30,30))
 
 	# do the same for bodies- in case faces are covered
-	detected_bodies = body_cascade.detectMultiScale(grayscale_image)
+	#detected_bodies = body_cascade.detectMultiScale(grayscale_image)
 
 	# uncomment the line below to see what faces are detected while developing
 	# show_faces(original_image,detected_faces)
