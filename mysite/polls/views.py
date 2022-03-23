@@ -221,7 +221,6 @@ def upload_image(request):
             # Create the table object
             obj = Image(
                 challenge=challenge,
-                title=challenge.name,
                 description=desc,
                 img=img,
                 gps_coordinates=(0, 0),
