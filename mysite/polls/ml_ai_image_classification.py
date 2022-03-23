@@ -91,7 +91,7 @@ def ai_face_recognition(image_path):
 	# show_faces(original_image,detected_faces)
 
 	# return the number of detected faces/bodies by returning the highest value for leniency
-	return max(len(detected_faces),len(detected_bodies))
+	return len(detected_faces)
 
 def show_faces(image,faces):
 	"""draw a rectangle around the faces and display- useful for developers to see results"""
