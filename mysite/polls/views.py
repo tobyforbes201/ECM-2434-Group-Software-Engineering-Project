@@ -13,21 +13,22 @@ from django.contrib import messages
 from django.utils import timezone
 
 from .ml_ai_image_classification import ai_classify_image, ai_face_recognition
-from .models import Image, Vote,Badge, Challenge
+from .models import Image, Vote, Badge, Challenge
 from .forms import LoginForm, SignupForm, ImagefieldForm, ProfileUpdateForm
 from .image_metadata import get_gps, get_time, get_distance
 from .validate import validate_metadata, validate_image_size
+
 
 def get_img_metadata(fname):
     """A function to return location and date taken from metadata."""
     return get_gps(fname), get_time(fname)
 
 
-def is_photo_valid_for_challenge(request,gps, date_taken, challenge, img_path,):
+def is_photo_valid_for_challenge(request, gps, date_taken, challenge, img_path, ):
     """Checks to see if the photo was taken within 2km of campus
     raise ValidationError(gps)."""
     if challenge.subject == "group":
-        #a group is more than one person
+        # a group is more than one person
         if ai_face_recognition(img_path) < 0:
             messages.info(request, 'AI did not find multiple faces')
             return False
@@ -36,15 +37,15 @@ def is_photo_valid_for_challenge(request,gps, date_taken, challenge, img_path,):
         pass
     else:
         if ai_classify_image(img_path, challenge.subject) == False:
-            messages.info(request, 'AI could not find a '+str(challenge.subject))
+            messages.info(request, 'AI could not find a ' + str(challenge.subject))
             return False
 
     if get_distance((challenge.location), gps) <= challenge.locationRadius:
-        #validate date
-        utc=pytz.UTC
+        # validate date
+        utc = pytz.UTC
         date_taken = utc.localize(date_taken)
-        #challenge.startDate = utc.localize(challenge.startDate)
-        #challenge.endDate = utc.localize(challenge.endDate)
+        # challenge.startDate = utc.localize(challenge.startDate)
+        # challenge.endDate = utc.localize(challenge.endDate)
         if date_taken > challenge.startDate and date_taken < challenge.endDate:
             return True
     return False
@@ -157,7 +158,7 @@ def check_challenge_active():
             position = 1
             for image in Image.objects.filter(challenge=challenge).order_by('score'):
                 user = image.user
-                if position == 1 and\
+                if position == 1 and \
                         Badge.objects.filter(user=user, name="First Badge").first() is None:
                     badge = Badge(
                         user=user,
@@ -166,7 +167,7 @@ def check_challenge_active():
                         badge_image="badges/firstbadge.png",
                     )
                     badge.save()
-                elif position == 2 and\
+                elif position == 2 and \
                         Badge.objects.filter(user=user, name="Second Badge").first() is None:
                     badge = Badge(
                         user=user,
@@ -175,7 +176,7 @@ def check_challenge_active():
                         badge_image="badges/secondbadge.png",
                     )
                     badge.save()
-                elif position == 3 and\
+                elif position == 3 and \
                         Badge.objects.filter(user=user, name="Third Badge").first() is None:
                     badge = Badge(
                         user=user,
@@ -252,8 +253,8 @@ def upload_image(request):
                 # message tells user what metadata is missing
                 return render(request, "uploadfile.html", context)  # refresh page
 
-            if is_photo_valid_for_challenge(request,gps, obj.taken_date,challenge,
-                Path('.' + obj.img.url)):
+            if is_photo_valid_for_challenge(request, gps, obj.taken_date, challenge,
+                                            Path('.' + obj.img.url)):
                 obj.save()
                 return redirect('successful_upload')
             messages.info(request, 'Photo is either too far from challenge'
@@ -300,7 +301,7 @@ def login(request):
         user = form.login()
         if user:
             auth_login(request, user)
-            return HttpResponseRedirect('/polls/')
+            return HttpResponseRedirect('/polls/feed')
     return render(request, 'login.html', {'form': form})
 
 
@@ -322,8 +323,11 @@ def display_feed(request):
 
     return render(request, 'feed.html', {'images': all_images})
 
+
 def leaderboards(request):
     """A view to display the leaderboards"""
+    if not request.user.is_authenticated:
+        return redirect('login')
     all_images = Image.objects.all()
     score_d = {}
     for image in all_images:
