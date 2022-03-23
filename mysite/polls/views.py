@@ -2,6 +2,7 @@
 import datetime
 import operator
 import random
+import pytz
 from pathlib import Path
 
 from django.contrib.auth import login as auth_login, logout as auth_logout
@@ -17,31 +18,35 @@ from .forms import LoginForm, SignupForm, ImagefieldForm, ProfileUpdateForm
 from .image_metadata import get_gps, get_time, get_distance
 from .validate import validate_metadata, validate_image_size
 
-
 def get_img_metadata(fname):
     """A function to return location and date taken from metadata."""
     return get_gps(fname), get_time(fname)
 
 
-def is_photo_valid_for_challenge(request,gps, date_taken, challenge_subject, img_path):
+def is_photo_valid_for_challenge(request,gps, date_taken, challenge, img_path,):
     """Checks to see if the photo was taken within 2km of campus
     raise ValidationError(gps)."""
-    if challenge_subject == "group":
+    if challenge.subject == "group":
         #a group is more than one person
-        if ai_face_recognition(img_path) < 1:
+        if ai_face_recognition(img_path) < 0:
             messages.info(request, 'AI did not find multiple faces')
             return False
-    elif challenge_subject == '' or challenge_subject == None:
+    elif challenge.subject == '' or challenge.subject == None or challenge.subject == 'test':
         # if there is no subject it cannot be analysed by the ai
         pass
     else:
-        if ai_classify_image(img_path, challenge_subject) == False:
-            messages.info(request, 'AI could not find a '+str(challenge_subject))
+        if ai_classify_image(img_path, challenge.subject) == False:
+            messages.info(request, 'AI could not find a '+str(challenge.subject))
             return False
 
-    if get_distance((50.7366, -3.5350), gps) <= 2:
-        # After this, the date should also be validated.
-        return True
+    if get_distance((challenge.location), gps) <= challenge.locationRadius:
+        #validate date
+        utc=pytz.UTC
+        date_taken = utc.localize(date_taken)
+        #challenge.startDate = utc.localize(challenge.startDate)
+        #challenge.endDate = utc.localize(challenge.endDate)
+        if date_taken > challenge.startDate and date_taken < challenge.endDate:
+            return True
     return False
 
 
@@ -175,7 +180,7 @@ def check_challenge_active():
                     badge = Badge(
                         user=user,
                         name="Third Badge",
-                        description="You came third in challenge",
+                        description="You came third in a challenge",
                         badge_image="badges/thirdbadge.png",
                     )
                     badge.save()
@@ -215,6 +220,7 @@ def upload_image(request):
             # Create the table object
             obj = Image(
                 challenge=challenge,
+                title=challenge.name,
                 description=desc,
                 img=img,
                 gps_coordinates=(0, 0),
@@ -246,7 +252,7 @@ def upload_image(request):
                 # message tells user what metadata is missing
                 return render(request, "uploadfile.html", context)  # refresh page
 
-            if is_photo_valid_for_challenge(request,gps, date_taken,challenge.subject,
+            if is_photo_valid_for_challenge(request,gps, obj.taken_date,challenge,
                 Path('.' + obj.img.url)):
                 obj.save()
                 return redirect('successful_upload')
