@@ -320,9 +320,9 @@ def display_feed(request):
     if not request.user.is_authenticated:
         return redirect('home')
     # images are displayed in a random order to keep the feed fresh every time
-    all_images = Image.objects.all().order_by('?')
+    challenge_images = Image.objects.filter(challenge__active=True).order_by('?')
 
-    return render(request, 'feed.html', {'images': all_images})
+    return render(request, 'feed.html', {'images': challenge_images})
 
 
 def leaderboards(request):
