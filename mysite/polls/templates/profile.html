@@ -203,20 +203,20 @@
 {% if user.is_authenticated %}
   <a class="btn btn-primary btn-lg" href="logout" role="button" style="width:30%;min-width: fit-content">Logout</a>
   {% endif %}
-<div div class = "central">
-  <div div class = "central1">
-    <h1>Profile</h1>
-    <h2>{{ user.get_username }}<br></h2>
+<div class = "central">
+  <div class = "central1">
+    <h1 style="font-size:8vw;">Profile:</h1>
+    <h2 style="font-size:8vw;">{{ user.get_username }}<br></h2>
     <center><img class="profile" src="{{ user.profile.img.url }}"></center>
   </div>
-<form method="POST" enctype="multipart/form-data">
+<form method="POST" enctype="multipart/form-data" style="font-size:4vw;">
         {% csrf_token %}
         <fieldset>
-            <legend>Total points</legend>
-            <h5>{{ score }}</h5>
-            <legend>Number of photos</legend>
-            <h5>{{ total_photos }}</h5>
-            <legend>Badges</legend>
+            <legend style="font-size:5vw;">Total points</legend>
+            <h5 style="font-size:5vw;">{{ score }}</h5>
+            <legend style="font-size:5vw;">Number of photos</legend>
+            <h5 style="font-size:5vw;">{{ total_photos }}</h5>
+            <legend style="font-size:5vw;">Badges</legend>
             <div class="badgerow">
             {% for badge in badges %}
                 <div class="badge">
@@ -225,13 +225,13 @@
                 </div>
             {% endfor %}
             </div>
-            <legend>Manage account</legend>
-            <h5><a href="{% url 'deleteuser' user.get_username %}" onclick="return confirm('Are you sure?')">Delete account</a></h5>
-            <legend>Edit profile picture</legend>
+            <legend style="font-size:5vw;">Manage account</legend>
+            <h5 style="font-size:5vw;"><a href="{% url 'deleteuser' user.get_username %}" onclick="return confirm('Are you sure?')">Delete account</a></h5>
+            <legend style="font-size:4vw;">Edit profile picture</legend>
             {{ p_form }} <!-- Profile form -->
         </fieldset>
         <div class="form-group">
-            <button class="btn btn-outline-info" type="submit">Update</button>
+            <button class="btn btn-primary" type="submit" style="font-size:4vw;width:30%;">Update</button>
         </div>
     </form>
 {% for img in images %}

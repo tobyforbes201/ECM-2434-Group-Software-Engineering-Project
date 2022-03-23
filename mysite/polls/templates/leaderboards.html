@@ -28,14 +28,12 @@
 	  </div>
 	</div>
 </nav>
-    <h1>Leaderboards</h1>
-  </div>
+    <h1 style="font-size:8vw;">Leaderboards</h1>
 {% for key, value in scores.items %}
-  <div style="margin:auto;width:50%;border:5px;padding:5px;text-align: center;">
-    <legend><h3><img src="{{key.profile.img.url}}" width="100vw" class="profile_feed">{{key.get_username}}</h3>
-    <h4><u>Score: {{value}}</u></h4></legend>
+  <div style="margin:auto;width:95vw;border:5px;padding:5px;text-align: center;">
+    <legend><h3 style="font-size:6vw;"><img src="{{key.profile.img.url}}" style="max-width:30%;padding-right:5%" class="profile_feed">{{key.get_username}}</h3>
+    <h4 style="font-size:6vw;"><u>Score: {{value}}</u></h4></legend>
   </div>
   {% endfor %}
-</div>
 </body>
 </html>
