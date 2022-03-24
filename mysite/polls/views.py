@@ -36,7 +36,6 @@ def is_photo_valid_for_challenge(request, gps, date_taken, challenge, img_path):
         # if there is no subject it cannot be analysed by the ai
         pass
     else:
-        img_path = Path('.'+img_path.url)
         if ai_classify_image(img_path, challenge.subject) == False:
             messages.info(request, 'AI could not find a ' + str(challenge.subject))
             return False

@@ -13,6 +13,7 @@ def ai_classify_image(img_path, subject):
 	classification is done via the Viola-Jones algorithm"""
 	subjects = []
 	subjects.append(subject)
+	img_path = './media/feed/' + img_path.name
 	# load the image as size 299,299 for the model to process
 	img = image.load_img(img_path, target_size=(299, 299))
 	#############################################
