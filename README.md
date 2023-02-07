@@ -1,5 +1,9 @@
 # BeautySpot: ECM-2434-Group-Software-Engineering-Project
 
+This was my fork to create a deployable version of the team project I worked on, the original code base can be found here: https://github.com/js1294/ECM-2434-Group-Software-Engineering-Project.
+
+A redeployed version of this can be found at https://www.beautyspot.app/ , it was designed to work only as a mobile website but feel free to check it out.
+
 Developers
 -----------
 Harry Collins- https://github.com/harry-kav  
